@@ -1,0 +1,71 @@
+package com.yuex.common.core.service.shop;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuex.common.core.entity.shop.Cart;
+import com.yuex.common.response.CartResponseVO;
+
+import java.util.List;
+
+/**
+ * 购物车商品表 服务类
+ *
+ * @author yuex
+ * @since 2020-08-03
+ */
+public interface ICartService extends IService<Cart> {
+
+    /**
+     * 检查用户购物车中是否有商品货品
+     *
+     * @param userId
+     * @param goodsId
+     * @param productId
+     * @return
+     */
+    Cart checkExistsGoods(Long userId, Long goodsId, Long productId);
+
+    /**
+     * 加入商品到购物车
+     * <p>
+     * 如果已经存在购物车货品，则增加数量；
+     * 否则添加新的购物车货品项。
+     *
+     * @param cart 购物车商品信息， { goodsId: xxx, productId: xxx, number: xxx }
+     * @return R
+     */
+    void add(Cart cart, Long userId);
+
+    /**
+     * 计算购物车中商品数量
+     *
+     * @return R
+     */
+    Long goodsCount(Long userId);
+
+    /**
+     * 查询用户购物车商品
+     *
+     * @param userId 用户ID
+     * @return R
+     */
+    List<CartResponseVO> list(Page<Cart> page, Long userId);
+
+    /**
+     * 改变购物车商品数量
+     *
+     * @param cartId 购物车商品ID
+     * @param number 商品数量
+     * @param userId 当前用户，用于校验归属
+     * @return r
+     */
+    Boolean changeNum(Long cartId, Integer number, Long userId);
+
+    /**
+     * 添加商品的默认选中货品至购物车
+     *
+     * @param cart 购物车对象
+     * @return r
+     */
+    void addDefaultGoodsProduct(Cart cart, Long userId);
+}

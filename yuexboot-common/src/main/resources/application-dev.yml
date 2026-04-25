@@ -1,0 +1,103 @@
+# 数据源配置
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    # 主库数据源
+    master:
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/lshop?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: '123456'
+      pool-name: hikariCP
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 600000
+      max-lifetime: 600000
+      connection-timeout: 5000
+      connection-test-query: SELECT 1
+    # 从库数据源
+    slave:
+      # 从数据源开关/默认关闭
+      enabled: false
+      url:
+      username:
+      password:
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 123456
+      database: 0
+      timeout: 300
+      lettuce:
+        shutdown-timeout: 100ms
+  #配置rabbitMq 服务器
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    # 消息确认配置项
+    # 确认消息已发送到交换机(Exchange)
+    publisher-confirm-type: correlated
+    # 确认消息已发送到队列(Queue)
+    publisher-returns: true
+    listener:
+      simple:
+        # 一个消费者最多可处理的nack（未确认）消息数量
+        prefetch: 1
+        acknowledge-mode: manual  # 消息确认方式，其有三种配置方式，分别是none、manual(手动ack) 和auto(自动ack) 默认auto
+sms:
+  danmi:
+    account-sid: your-account-sid
+    auth-token: your-auth-token
+    account-id: your-account-id
+    api-url: https://openapi.danmi.com/textSMS/sendSMS/V3
+    enabled: true
+
+es:
+  config:
+    host: 127.0.0.1
+    port: 9200
+    username: 
+    password: 
+    scheme: http
+    shards: 3
+    replicas: 2
+
+# wx支付配置
+shop:
+  # 开发者应该设置成自己的wx相关信息
+  wxpay:
+    app-id:
+    app-secret:
+    mch-id:
+    mch-key:
+    api-v3key: ""
+    # 将v3支付证书解压放到项目resource文件夹下
+    key-path: "classpath:apiclient_cert.p12"
+    private-cert-path: "classpath:apiclient_cert.pem"
+    private-key-path: "classpath:apiclient_key.pem"
+    notify-url: xxxxx
+  # alipay
+  alipay:
+    app-id: 9021000162665646
+    rsa-private-key: MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCMW9reyR8UYEQNBck+mm6urJvho5z23OsQRK95EoL0BSmI/qSu17W0QKwOiq7ZNJ7KdjoG5nnMiFDaM7x6sdY5BWhxql5BzXyomhTaDelBNrRfzGdm6i9I4bRzHBNxpTxgi2sxet+csrS34ZMXuKFZbB6i5Zy1YLSeJDNDQgHLhNNLvbVaklbbi6kmZ1N+LOxTBx0kBpkIIDbf1OBZnhYP7CuK+rXhooTZpXRPGvrPY6fQvG7CFGeaan7MfYSJRg49jKIXxSgZFVdO0otG8rxDRRxIgONdzVc5gi5VJC13WcgtUPEOJYTAGZt9GfGiP9M5b0SHqtksBkLTaz9SCGJHAgMBAAECggEAXL9Nz62C1goOrbRHGREfVllE4EMnM5Ej2yon8Y8j7W+D1Ly/wbFUpnmduDY399tnmk2pZmnhzh+9nZJWV5UwA5npPELh6gWI/Dhk0voiSi+F3U/KfBz/hd9vSCkjSBNx5DH8cUPKg1crR97NPf2I0Pg6/lVPyiLO9zjgju8NFJf7SujdEoh5cpWBp4J2nHQtKTMm5pItlw/f46/IEyTtg0KRIcG0M3iaP16h1SKvqegbDoWrcLNGIMWnZ+4fU5KuWHwpKsYZ7BWRI26nWw0fH1jo5+iSBMoUf3xZXyPeVlc7kBLoiFTwXaxK2FjOPF1Cr5pTOkqyE0ef9gwjj6n1sQKBgQD3LbkfXE1Gu/n6bsJknsoTUlrnYabsBmHWInPnY1Pk3ufWx6mKpPgwK8fN7CCOiBJundv1oNeMoVMM+OS3j0OTi+M9XP6Xem0gKsvmD3hnXzzOdRXdFhE2YwBAM6dxBAbqB+LMB4Aqh1TKrr6rSVDKjmAm12ib2gz0L9MXZWn7swKBgQCRXjQE7jePuJMclL4XZViZe3Bx51llnPgLSW8jPzUJhlR/3fwFYpaZoVELrJ6gLWcpMt9ftWKyBLb4HOOz6fpVdPvfJkwBVm8yy7v0sQygXXDmMZ0eS9My5+HR+MkjcCJS4JI8dpyBO8edVmRpEG1d1bjBzDhgimTsVYQGIsIlHQKBgQDbDNM1HpiBKg9Dx6pQf4Q3kVFsIldKbfGAUnICyjzL5FrzNWhjrQUhs3rTXAISLjaffxgyWsMLJuCx61TN85GAjYTpmaMp3N4elq6yCF28xmLd2Fdy4Z6JYz0SqHQoLNhvyGNOSwtjJSGYqTniFAwcJgbCBT34eEnokQVyg3ZkDwKBgQCCI3Kwg07sdJIHAUZYjZtO9EpLPpEyvd71w80iIeDqYP7e5i1L6OHoMZnruKLdxSfYozmEZk8wDbZ70ukq1SoOPUeLk65xeB7eu7PNsH8cRerfucTuLXWq2hq5Ll9rQWUJCxD/3jPoIktnGMOVp2YxnjbkEF7cVqlZRomGMLHcJQKBgQCVTqvXX5ueeJUQk7lsi6bpuB85UsEtvEe3iPdqMMpzHobY84g4OQOWQBzDlk2sMQ6NQok7PMY/qeZnlqTI1wB5IS166sU/yQREW5DQU/jNHMt1kT8fMkv3bKzOyz+G9B7CX02Rw3QUV+Tmqq06BMPJLKo0USiC0SAbGPpSIEr1/w==
+    alipay-public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlECW7EpQf0c+q4/ur4tfeWaW6HL1JbTr+8gVN0kjXWvXuAVmRWAgiAa9qlGqX00bI1e7jJjEh53EWyVfozTkba/oi0JCbB3heEcUmP6Os7UmTnMjDVhp7v3vAzVo1FLroAuvmt8xVeWNe3Eh5hn5p57sLF68UAEYuS9wNdYK1TEhTQrOIMjrX04rbX/MfAajsbsyMJqGePbm9mqMXAznS30Vhuybar1Sqpiprc/4qd1MiZmXG82YsB0SxvfEIwVWTW6g4dbhvtOpGnHQra4bx6dLWzq3+tdNgNKCrL/XkkkLCuLik8womA6wOxVxrmvMTvZ4zhM8c44gswZiTqa4VQIDAQAB
+    gateway: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+    charset: UTF-8
+    format: json
+    log_path: /opt/yuexboot-mall/log
+    signtype: RSA2
+    notify-url: https://68755a89.r10.cpolar.top/pay/aliPayNotify
+  # 易支付
+  epay:
+    apiurl: "https://epay.beiyunzd.cn/"
+    pid: ""
+    key: ""
+    notify-url: xxxxx
+
+wx:
+  appId: ""
+  appSecret: ""

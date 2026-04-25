@@ -1,0 +1,198 @@
+{
+  "groups": [
+    {
+      "name": "shop.alipay",
+      "type": "com.wayn.common.config.AlipayConfig",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.epay",
+      "type": "com.wayn.common.config.EpayConfig",
+      "sourceType": "com.wayn.common.config.EpayConfig"
+    },
+    {
+      "name": "shop.wxpay",
+      "type": "com.wayn.common.config.WeixinPayConfig",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "sms.danmi",
+      "type": "com.wayn.common.config.DanmiSmsConfig",
+      "sourceType": "com.wayn.common.config.DanmiSmsConfig"
+    },
+    {
+      "name": "token",
+      "type": "com.wayn.common.config.TokenConfig",
+      "sourceType": "com.wayn.common.config.TokenConfig"
+    },
+    {
+      "name": "wayn",
+      "type": "com.wayn.common.config.WaynConfig",
+      "sourceType": "com.wayn.common.config.WaynConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "shop.alipay.alipay-public-key",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.app-id",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.charset",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.format",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.gateway",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.log-path",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.notify-url",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.rsa-private-key",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.alipay.signtype",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.AlipayConfig"
+    },
+    {
+      "name": "shop.epay.apiurl",
+      "type": "java.lang.String",
+      "description": "支付接口地址",
+      "sourceType": "com.wayn.common.config.EpayConfig"
+    },
+    {
+      "name": "shop.epay.key",
+      "type": "java.lang.String",
+      "description": "商户密钥",
+      "sourceType": "com.wayn.common.config.EpayConfig"
+    },
+    {
+      "name": "shop.epay.notify-url",
+      "type": "java.lang.String",
+      "description": "支付成功回调通知地址",
+      "sourceType": "com.wayn.common.config.EpayConfig"
+    },
+    {
+      "name": "shop.epay.pid",
+      "type": "java.lang.String",
+      "description": "商户ID",
+      "sourceType": "com.wayn.common.config.EpayConfig"
+    },
+    {
+      "name": "shop.wxpay.api-v3key",
+      "type": "java.lang.String",
+      "description": "微信v3支付需要 apiV3 秘钥值",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.app-id",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.app-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.key-path",
+      "type": "java.lang.String",
+      "description": "微信v2支付需要 p12证书文件的绝对路径或者以classpath:开头的类路径.",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.mch-id",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.mch-key",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.notify-url",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.private-cert-path",
+      "type": "java.lang.String",
+      "description": "微信v3支付需要 apiclient_cert. pem证书文件的绝对路径或者以classpath:开头的类路径.",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "shop.wxpay.private-key-path",
+      "type": "java.lang.String",
+      "description": "微信v3支付需要 apiclient_key. pem证书文件的绝对路径或者以classpath:开头的类路径",
+      "sourceType": "com.wayn.common.config.WeixinPayConfig"
+    },
+    {
+      "name": "sms.danmi.account-id",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.DanmiSmsConfig"
+    },
+    {
+      "name": "sms.danmi.account-sid",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.DanmiSmsConfig"
+    },
+    {
+      "name": "sms.danmi.api-url",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.DanmiSmsConfig"
+    },
+    {
+      "name": "sms.danmi.auth-token",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.common.config.DanmiSmsConfig"
+    },
+    {
+      "name": "sms.danmi.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.wayn.common.config.DanmiSmsConfig"
+    },
+    {
+      "name": "token.expire-time",
+      "type": "java.lang.Integer",
+      "description": "登录会话有效期（分钟），同时用于 Redis TTL；移动端 JWT 过期与此对齐",
+      "sourceType": "com.wayn.common.config.TokenConfig"
+    },
+    {
+      "name": "token.header",
+      "type": "java.lang.String",
+      "description": "令牌自定义标识",
+      "sourceType": "com.wayn.common.config.TokenConfig"
+    },
+    {
+      "name": "token.secret",
+      "type": "java.lang.String",
+      "description": "令牌秘钥",
+      "sourceType": "com.wayn.common.config.TokenConfig"
+    }
+  ],
+  "hints": []
+}

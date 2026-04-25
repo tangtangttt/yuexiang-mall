@@ -1,0 +1,6 @@
+com\wayn\data\elastic\config\ElasticClientConfig.class
+com\wayn\data\elastic\config\ElasticConfig.class
+com\wayn\data\elastic\constant\EsConstants.class
+META-INF\spring-configuration-metadata.json
+com\wayn\data\elastic\manager\ElasticDocument.class
+com\wayn\data\elastic\manager\ElasticEntity.class

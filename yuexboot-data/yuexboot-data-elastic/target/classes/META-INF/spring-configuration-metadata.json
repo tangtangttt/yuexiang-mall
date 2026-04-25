@@ -1,0 +1,47 @@
+{
+  "groups": [
+    {
+      "name": "es.config",
+      "type": "com.wayn.data.elastic.config.ElasticConfig",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "es.config.host",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    },
+    {
+      "name": "es.config.password",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    },
+    {
+      "name": "es.config.port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    },
+    {
+      "name": "es.config.replicas",
+      "type": "java.lang.Integer",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    },
+    {
+      "name": "es.config.scheme",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    },
+    {
+      "name": "es.config.shards",
+      "type": "java.lang.Integer",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    },
+    {
+      "name": "es.config.username",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.data.elastic.config.ElasticConfig"
+    }
+  ],
+  "hints": []
+}

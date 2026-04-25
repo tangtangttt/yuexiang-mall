@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="yuexboot-monitor" />
+        <module name="yuexboot-data-redis" />
+        <module name="yuexboot-job-xxl-job" />
+        <module name="yuexboot-message-consumer" />
+        <module name="yuexboot-data-elastic" />
+        <module name="yuexboot-mobile-api" />
+        <module name="yuexboot-util" />
+        <module name="yuexboot-common" />
+        <module name="yuexboot-admin-api" />
+        <module name="yuexboot-message-core" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="8" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="yuexboot-admin-api" options="-parameters" />
+      <module name="yuexboot-common" options="-parameters" />
+      <module name="yuexboot-data" options="-parameters" />
+      <module name="yuexboot-data-elastic" options="-parameters" />
+      <module name="yuexboot-data-redis" options="-parameters" />
+      <module name="yuexboot-job" options="-parameters" />
+      <module name="yuexboot-job-xxl-job" options="-parameters" />
+      <module name="yuexboot-mall" options="-parameters" />
+      <module name="yuexboot-message" options="-parameters" />
+      <module name="yuexboot-message-consumer" options="-parameters" />
+      <module name="yuexboot-message-core" options="-parameters" />
+      <module name="yuexboot-mobile-api" options="-parameters" />
+      <module name="yuexboot-monitor" options="-parameters" />
+      <module name="yuexboot-util" options="-parameters" />
+    </option>
+  </component>
+</project>

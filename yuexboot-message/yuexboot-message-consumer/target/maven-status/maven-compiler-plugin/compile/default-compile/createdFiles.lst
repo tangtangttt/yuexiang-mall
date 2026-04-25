@@ -1,0 +1,7 @@
+com\wayn\MessageApplication.class
+com\wayn\message\consumer\EmailSendConsumer.class
+com\wayn\message\consumer\config\RestTemplateConfig.class
+com\wayn\message\consumer\OrderDelayConsumer.class
+com\wayn\message\consumer\OrderPayConsumer.class
+com\wayn\message\consumer\api\impl\MobileApiImpl.class
+com\wayn\message\consumer\api\MobileApi.class

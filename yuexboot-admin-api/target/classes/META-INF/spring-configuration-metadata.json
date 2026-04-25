@@ -1,0 +1,38 @@
+{
+  "groups": [
+    {
+      "name": "shop.express",
+      "type": "com.wayn.admin.framework.config.properties.ExpressProperties",
+      "sourceType": "com.wayn.admin.framework.config.properties.ExpressProperties"
+    },
+    {
+      "name": "spring.datasource.master",
+      "type": "javax.sql.DataSource",
+      "sourceType": "com.wayn.admin.framework.config.HikariCpConfig",
+      "sourceMethod": "public javax.sql.DataSource masterDataSource() "
+    }
+  ],
+  "properties": [
+    {
+      "name": "shop.express.app-id",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.admin.framework.config.properties.ExpressProperties"
+    },
+    {
+      "name": "shop.express.app-key",
+      "type": "java.lang.String",
+      "sourceType": "com.wayn.admin.framework.config.properties.ExpressProperties"
+    },
+    {
+      "name": "shop.express.enable",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.wayn.admin.framework.config.properties.ExpressProperties"
+    },
+    {
+      "name": "shop.express.vendors",
+      "type": "java.util.List<java.util.Map<java.lang.String,java.lang.String>>",
+      "sourceType": "com.wayn.admin.framework.config.properties.ExpressProperties"
+    }
+  ],
+  "hints": []
+}

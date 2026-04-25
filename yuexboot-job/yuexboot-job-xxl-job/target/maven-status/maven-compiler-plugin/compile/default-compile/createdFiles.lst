@@ -1,0 +1,4 @@
+com\wayn\job\jobhandler\MyXxlJob.class
+com\wayn\job\XxlJobExecutorApplication.class
+com\wayn\job\jobhandler\SampleXxlJob.class
+com\wayn\job\config\XxlJobConfig.class

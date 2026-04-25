@@ -1,0 +1,6 @@
+com\wayn\message\core\config\RabbitTemplateConfig.class
+com\wayn\message\core\config\DelayRabbitMqConfig.class
+com\wayn\message\core\config\DeadLetterRabbitMqConfig.class
+com\wayn\message\core\dto\OrderDTO.class
+com\wayn\message\core\config\BusinessRabbitConfig.class
+com\wayn\message\core\constant\MQConstants.class
