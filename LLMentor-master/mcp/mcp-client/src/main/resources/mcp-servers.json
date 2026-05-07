@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "weather-stdio": {
+      "command": "java",
+      "args": ["-jar", "D:\\LLMentor\\LLMentor\\mcp\\mcp-server-stdio\\target\\mcp-server-stdio-1.0.0-SNAPSHOT.jar"]
+    }
+  }
+}

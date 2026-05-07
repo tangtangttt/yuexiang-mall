@@ -1,0 +1,31 @@
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+    key-alias: local-ssl
+    enabled: true
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+spring:
+  application:
+    name: mcp-weather-sse
+  ai:
+    mcp:
+      server:
+        enabled: true
+        name: weather-sse-server
+        version: 1.0.0
+        type: SYNC
+        capabilities:
+          tool: true
+          resource: false
+          prompt: false
+          completion: false
+        sse-message-endpoint: /mcp/messages   # 客户端向 MCP Server 发送指令（"写信"）
+        sse-endpoint: /sse                    # 客户端订阅服务器推送消息（"听收音机"）

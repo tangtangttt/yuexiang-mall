@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: LLMentor_RAG
+  ai:
+    dashscope:
+      api-key: @dashscope.api.key@
+      embedding:
+        options:
+          model: text-embedding-v4
+          dimensions: 768
+    vectorstore:
+      pgvector:
+        # 向量索引类型
+        index-type: HNSW
+        # 距离度量，余弦值
+        distance-type: COSINE_DISTANCE
+        # 向量维度
+        dimensions: 768
+        # 批量处理大小
+        max-document-batch-size: 9
+        # 启动时是否自动创建表（设为false，避免启动时连接失败）
+        initialize-schema: false
+        # 创建的表名
+        table-name: vector_st
+  datasource:
+    url: jdbc:postgresql://localhost:5433/rag_test # 记得改成你自己的
+    username: pgvector # 记得改成你自己的
+    password: pgvector # 记得改成你自己的
+  neo4j:
+    uri: bolt://localhost:7687 # 记得改成你自己的
+    authentication:
+      username: neo4j # 记得改成你自己的
+      password: neo4j666 # 记得改成你自己的
+    # 连接失败不阻止启动
+    connection-timeout: 5s
+    # 启动时不验证连接
+    verify-connection: false
+  sql:
+    init:
+      continue-on-error: true  # SQL初始化失败时继续启动
+  elasticsearch:
+    uris: http://localhost:9200
+
+minio:
+  url: http://localhost:9000 # 记得改成你自己的
+  accessKey: minioadmin # 记得改成你自己的
+  secretKey: minioadmin # 记得改成你自己的
+  bucketName: rag-test # 记得改成你自己的
+  endpoint: http://localhost:9000 # 记得改成你自己的
+
+server:
+  port: 8001

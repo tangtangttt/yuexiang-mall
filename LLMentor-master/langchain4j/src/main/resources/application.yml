@@ -1,0 +1,28 @@
+server:
+  port: 8022
+spring:
+  application:
+    name: LangChain4JRun
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      timeout: 5s
+      password: 123456
+
+langchain4j:
+  open-ai:
+    chat-model:
+      api-key: @dashscope.api.key@
+      model-name: glm-4.5-air
+      base-url: https://open.bigmodel.cn/api/paas/v4
+      log-requests: true
+      log-responses: true
+    streaming-chat-model:
+      api-key: @dashscope.api.key@
+      model-name: glm-4.5-air
+      base-url: https://open.bigmodel.cn/api/paas/v4
+      log-requests: true
+      log-responses: true
+

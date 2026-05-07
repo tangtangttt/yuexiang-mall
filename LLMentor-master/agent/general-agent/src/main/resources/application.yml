@@ -1,0 +1,47 @@
+server:
+  port: 8008
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+spring:
+  main:
+    web-application-type: reactive
+  ai:
+    openai:
+      api-key: @dashscope.api.key@
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/
+      chat:
+        options:
+          model: qwen-plus
+          temperature: 0.7
+          maxTokens: 5000
+  datasource:
+    url: jdbc:mysql://rm-2zeivkce6c991m3j8no.mysql.rds.aliyuncs.com/spring_ai_db2?useUnicode=true&characterEncoding=UTF-8  # 记得改成你自己的
+    username: leetjava
+    password: Leetjava666
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      initialization-fail-timeout: -1  # 禁用连接池初始化超时检查，允许启动时无数据库连接
+  sql:
+    init:
+      continue-on-error: true  # SQL初始化失败时继续启动
+#    mcp:
+#      client:
+#        enabled: true
+#        name: general-agent
+#        version: 1.0.0
+#        request-timeout: 60s
+#        type: SYNC
+#        streamable-http:
+#          connections:
+#            weather-streamable:
+#              url: http://127.0.0.1:8004/stream/test/
+#              endpoint: api/mcp
+
+logging:
+  level:
+    org:
+      springframework:
+        ai: DEBUG

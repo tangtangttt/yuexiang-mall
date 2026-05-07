@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>支付完成</title>
+</head>
+<body>
+  <p style="font-family:sans-serif;padding:16px;">正在返回商城…</p>
+  <script>
+    (function () {
+      var path = window.location.pathname || '';
+      var dir = path.substring(0, path.lastIndexOf('/') + 1);
+      var q = window.location.search || '';
+      var extra = q.length > 1 ? '&' + q.slice(1) : '';
+      window.location.replace(window.location.origin + dir + '#/order/payStatus?status=success' + extra);
+    })();
+  </script>
+</body>
+</html>
