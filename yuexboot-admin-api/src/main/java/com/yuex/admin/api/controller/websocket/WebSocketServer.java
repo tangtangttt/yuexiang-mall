@@ -30,8 +30,7 @@ public class WebSocketServer {
         try {
             session.getBasicRemote().sendText(message);
         } catch (IOException e) {
-            log.error("发送消息出错：{}", e.getMessage());
-            e.printStackTrace();
+            log.error("发送消息出错", e);
         }
     }
 
@@ -115,7 +114,6 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
-        error.printStackTrace();
+        log.error("发生错误，Session ID： {}", session.getId(), error);
     }
 }

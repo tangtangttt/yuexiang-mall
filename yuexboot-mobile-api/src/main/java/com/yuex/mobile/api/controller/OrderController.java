@@ -44,7 +44,8 @@ public class OrderController extends BaseController {
      */
     @GetMapping("detail/{orderSn}")
     public R<OrderDetailVO> detail(@PathVariable String orderSn) {
-        return R.success(iMobileOrderService.getOrderDetailByOrderSn(orderSn));
+        Long userId = MobileSecurityUtils.getUserId();
+        return R.success(iMobileOrderService.getOrderDetailByOrderSn(orderSn, userId));
     }
 
     /**
@@ -145,7 +146,8 @@ public class OrderController extends BaseController {
      */
     @PostMapping("cancel/{orderId}")
     public R<Boolean> cancel(@PathVariable Long orderId) {
-        iMobileOrderService.cancel(orderId);
+        Long userId = MobileSecurityUtils.getUserId();
+        iMobileOrderService.cancel(orderId, userId);
         return R.success();
     }
 
@@ -157,7 +159,8 @@ public class OrderController extends BaseController {
      */
     @PostMapping("confirm/{orderId}")
     public R<Boolean> confirm(@PathVariable Long orderId) {
-        iMobileOrderService.confirm(orderId);
+        Long userId = MobileSecurityUtils.getUserId();
+        iMobileOrderService.confirm(orderId, userId);
         return R.success();
     }
 
@@ -169,7 +172,8 @@ public class OrderController extends BaseController {
      */
     @PostMapping("delete/{orderId}")
     public R<Boolean> delete(@PathVariable Long orderId) {
-        iMobileOrderService.delete(orderId);
+        Long userId = MobileSecurityUtils.getUserId();
+        iMobileOrderService.delete(orderId, userId);
         return R.success();
     }
 

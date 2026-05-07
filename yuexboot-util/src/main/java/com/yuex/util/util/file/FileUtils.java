@@ -57,14 +57,14 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
                 try {
                     os.close();
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                    log.error(e1.getMessage(), e1);
                 }
             }
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                    log.error(e1.getMessage(), e1);
                 }
             }
         }
@@ -154,18 +154,14 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @return 文件内容
      */
     public static String getContent(InputStream inputStream) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder content = new StringBuilder();
-        String temp = null;
-        while (true) {
-            try {
-                if ((temp = br.readLine()) == null) {
-                    break;
-                }
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                content.append(temp);
             }
-            content.append(temp);
+        } catch (IOException e) {
+            log.error("读取文件内容失败", e);
         }
         return content.toString();
     }

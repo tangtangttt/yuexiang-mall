@@ -2,7 +2,7 @@ package com.yuex.common.base.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yuex.common.base.service.UploadService;
-import com.yuex.common.config.yuexConfig;
+import com.yuex.common.config.YuexConfig;
 import com.yuex.common.core.vo.Base64FileVO;
 import com.yuex.util.enums.ReturnCodeEnum;
 import com.yuex.util.exception.BusinessException;
@@ -49,7 +49,7 @@ public class CommonFileController {
                 throw new BusinessException("文件名称(" + fileName + ")非法，不允许下载。 ");
             }
             // 2. 获取要下载的文件所在服务器的下载目录位置
-            String filePath = yuexConfig.getDownloadPath() + fileName;
+            String filePath = YuexConfig.getDownloadPath() + fileName;
             // 3. 重命令下载文件名称
             String realFileName = System.currentTimeMillis() + FilenameUtils.EXTENSION_SEPARATOR + FilenameUtils.getExtension(fileName);
             // 4. 将下载文件写入响应流并设置下载文件名称
@@ -98,7 +98,7 @@ public class CommonFileController {
     public R<String> uploadFile(MultipartFile file, HttpServletRequest request) {
         try {
             // 1. 获取上传文件的保存路径
-            String filePath = yuexConfig.getUploadDir();
+            String filePath = YuexConfig.getUploadDir();
             log.info("file path is {}", filePath);
             // 2. 上传文件至服务器
             String fileName = FileUploadUtil.uploadFile(file, filePath);
@@ -122,7 +122,7 @@ public class CommonFileController {
         try {
             byte[] decode = Base64.getDecoder().decode(base64content.substring(base64content.indexOf(IMAGE_BASE64_FLAG) + IMAGE_BASE64_FLAG.length()));
             // 上传文件路径
-            String filePath = yuexConfig.getUploadDir();
+            String filePath = YuexConfig.getUploadDir();
             String fileName = FileUploadUtil.uploadFile(decode, filename, filePath);
             String fileUrl = uploadService.uploadFile(fileName);
             return R.success(fileUrl);
@@ -145,7 +145,7 @@ public class CommonFileController {
                 String base64content = base64FileVO.getBase64content();
                 byte[] decode = Base64.getDecoder().decode(base64content.substring(base64content.indexOf(IMAGE_BASE64_FLAG) + IMAGE_BASE64_FLAG.length()));
                 // 上传文件路径
-                String filePath = yuexConfig.getUploadDir();
+                String filePath = YuexConfig.getUploadDir();
                 String fileName = FileUploadUtil.uploadFile(decode, filename, filePath);
                 String fileUrl = uploadService.uploadFile(fileName);
                 JSONObject jsonObject = new JSONObject();

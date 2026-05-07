@@ -30,7 +30,7 @@
     </sql>
 
     <update id="updateReceiveNum">
-        update shop_coupon set receive_num = receive_num + 1 where id = #{couponId}
+        update shop_coupon set receive_num = receive_num + 1 where id = #{couponId} AND receive_num &lt; num
     </update>
 
     <select id="selectCouponListPage" resultType="com.yuex.common.core.entity.shop.ShopCoupon">

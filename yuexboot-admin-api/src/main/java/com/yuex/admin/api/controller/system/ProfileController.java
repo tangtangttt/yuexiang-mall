@@ -4,7 +4,7 @@ import com.yuex.admin.framework.security.model.LoginUserDetail;
 import com.yuex.admin.framework.security.service.TokenService;
 import com.yuex.admin.framework.security.util.SecurityUtils;
 import com.yuex.common.base.service.UploadService;
-import com.yuex.common.config.yuexConfig;
+import com.yuex.common.config.YuexConfig;
 import com.yuex.common.core.entity.system.User;
 import com.yuex.common.core.service.system.IUserService;
 import com.yuex.common.response.UserProfileResVO;
@@ -115,7 +115,7 @@ public class ProfileController {
     public R<String> avatar(@RequestParam("avatarfile") MultipartFile file, HttpServletRequest request) throws IOException {
         if (!file.isEmpty()) {
             LoginUserDetail loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-            String filename = FileUploadUtil.uploadFile(file, yuexConfig.getUploadDir());
+            String filename = FileUploadUtil.uploadFile(file, YuexConfig.getUploadDir());
             String fileUrl = uploadService.uploadFile(filename);
             boolean result = iUserService.update().set("avatar", fileUrl).eq("user_name", loginUser.getUsername()).update();
             if (result) {

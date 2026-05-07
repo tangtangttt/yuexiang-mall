@@ -29,6 +29,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 @EnableCaching
 @Configuration
@@ -44,6 +45,8 @@ public class CacheConfig implements CachingConfigurer {
         mapper.registerModule(new JavaTimeModule());
         // 禁用将日期写为时间戳
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        // 设置时区为东八区，确保日期序列化/反序列化使用正确的时区
+        mapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 
         // 禁用多态类型信息，避免格式不匹配问题
         // 如果需要类型信息，可以使用 @JsonTypeInfo 注解在具体类上配置

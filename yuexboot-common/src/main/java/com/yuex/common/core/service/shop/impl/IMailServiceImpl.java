@@ -27,7 +27,6 @@ public class IMailServiceImpl implements IMailService {
     @Override
     public void sendEmail(String subject, String content, String tos, String notifyUrl) throws UnsupportedEncodingException {
         String uid = IdUtil.getUid();
-        System.out.println(uid);
         log.info("异步发送邮件，消息确认发送 correlationData：{}", uid);
         CorrelationData correlationData = new CorrelationData(uid);
         Map<String, Object> map = new HashMap<>();

@@ -9,11 +9,13 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.yuex.common.core.entity.shop.Member;
 import com.yuex.common.core.entity.shop.Order;
 import com.yuex.common.core.entity.shop.OrderGoods;
+import com.yuex.common.core.entity.shop.ShopMemberCoupon;
 import com.yuex.common.core.mapper.shop.AdminOrderMapper;
 import com.yuex.common.core.service.shop.IGoodsProductService;
 import com.yuex.common.core.service.shop.IMemberService;
 import com.yuex.common.core.service.shop.IOrderGoodsService;
 import com.yuex.common.core.service.shop.IOrderService;
+import com.yuex.common.core.service.shop.ShopMemberCouponService;
 import com.yuex.common.core.vo.MemberVO;
 import com.yuex.common.core.vo.OrderGoodsVO;
 import com.yuex.common.core.vo.OrderVO;
@@ -42,6 +44,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -53,6 +56,7 @@ public class OrderServiceImpl extends ServiceImpl<AdminOrderMapper, Order> imple
     private IGoodsProductService iGoodsProductService;
     private IMemberService iMemberService;
     private RefundContext refundContext;
+    private ShopMemberCouponService shopMemberCouponService;
     private PlatformTransactionManager platformTransactionManager;
 
     @Override
@@ -82,51 +86,66 @@ public class OrderServiceImpl extends ServiceImpl<AdminOrderMapper, Order> imple
         List<OrderGoods> orderGoodsList = iOrderGoodsService.list(new QueryWrapper<OrderGoods>()
                 .eq("order_id", order.getId()));
         // 如果订单不是申请退款状态，则不能退款
-        if (!order.getOrderStatus().equals(OrderStatusEnum.STATUS_REFUND.getStatus())) {
+        if (!Objects.equals(order.getOrderStatus(), OrderStatusEnum.STATUS_REFUND.getStatus())) {
             throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_REFUND_ERROR);
         }
+
+        // 1. 先调用三方接口（事务外），确保资金安全：避免三方已退款但本地事务回滚导致账实不符
+        boolean thirdPartySuccess = false;
+        String refundFailReason = null;
+        try {
+            RefundInterface instance = refundContext.getInstance(order.getPayType());
+            reqVO.setPayId(order.getPayId());
+            reqVO.setTotalMoney(order.getActualPrice());
+            instance.refund(reqVO);
+            thirdPartySuccess = true;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            refundFailReason = reqVO.getRefundReason() + " 退款失败：" + StringUtils.substring(e.getMessage(), 0, 2000);
+        }
+
+        // 2. 本地事务只更新 DB 状态
         TransactionStatus transaction = platformTransactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
-            // 调用三方接口进行退款
-            int refundStatus = 2;
-            Short orderStatus = OrderStatusEnum.STATUS_REFUND.getStatus();
-            try {
-                RefundInterface instance = refundContext.getInstance(order.getPayType());
-                reqVO.setPayId(order.getPayId());
-                instance.refund(reqVO);
-                orderStatus = OrderStatusEnum.STATUS_REFUND_CONFIRM.getStatus();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                refundStatus = 3;
-                refundMoney = BigDecimal.ZERO;
-                reqVO.setRefundReason(reqVO.getRefundReason() + " 退款失败：" + StringUtils.substring(e.getMessage(), 0, 2000));
-            }
-            Integer payType = order.getPayType();
-            LocalDateTime now = LocalDateTime.now();
-            // 设置订单取消状态
+            int refundStatus = thirdPartySuccess ? 2 : 3;
+            BigDecimal finalRefundMoney = thirdPartySuccess ? refundMoney : BigDecimal.ZERO;
+            String finalReason = thirdPartySuccess ? reqVO.getRefundReason() : refundFailReason;
+            Short orderStatus = thirdPartySuccess ? OrderStatusEnum.STATUS_REFUND_CONFIRM.getStatus() : OrderStatusEnum.STATUS_REFUND.getStatus();
+
             order.setOrderStatus(orderStatus);
-            order.setOrderEndTime(now);
-            // 记录订单退款相关信息
+            order.setOrderEndTime(LocalDateTime.now());
             order.setRefundStatus(refundStatus);
-            order.setRefundAmount(refundMoney);
-            order.setRefundType(payType);
-            order.setRefundContent(reqVO.getRefundReason());
-            order.setRefundTime(now);
+            order.setRefundAmount(finalRefundMoney);
+            order.setRefundType(order.getPayType());
+            order.setRefundContent(finalReason);
+            order.setRefundTime(LocalDateTime.now());
             order.setUpdateTime(new Date());
-            updateById(order);
+            if (!updateById(order)) {
+                throw new RuntimeException("订单退款状态更新失败");
+            }
+
             if (refundStatus == 2) {
                 for (OrderGoods orderGoods : orderGoodsList) {
-                    Long productId = orderGoods.getProductId();
-                    Integer number = orderGoods.getNumber();
-                    if (!iGoodsProductService.addStock(productId, number)) {
+                    if (!iGoodsProductService.addStock(orderGoods.getProductId(), orderGoods.getNumber())) {
                         throw new RuntimeException("商品货品库存增加失败");
                     }
+                }
+                // 退还优惠券
+                if (order.getCouponPrice() != null && order.getCouponPrice().compareTo(BigDecimal.ZERO) > 0) {
+                    shopMemberCouponService.lambdaUpdate()
+                            .set(ShopMemberCoupon::getUseStatus, 0)
+                            .set(ShopMemberCoupon::getOrderId, null)
+                            .eq(ShopMemberCoupon::getOrderId, order.getId())
+                            .eq(ShopMemberCoupon::getUseStatus, 1)
+                            .update();
+                    log.info("退款成功，退还优惠券，orderId：{}", order.getId());
                 }
             }
             platformTransactionManager.commit(transaction);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             platformTransactionManager.rollback(transaction);
+            throw new BusinessException(ReturnCodeEnum.ORDER_REFUND_ERROR, "退款状态更新失败，请人工核对");
         }
     }
 
@@ -145,16 +164,22 @@ public class OrderServiceImpl extends ServiceImpl<AdminOrderMapper, Order> imple
         }
 
         // 如果订单不是支付状态，则不能发货
-        if (!order.getOrderStatus().equals(OrderStatusEnum.STATUS_PAY.getStatus())) {
+        if (!Objects.equals(order.getOrderStatus(), OrderStatusEnum.STATUS_PAY.getStatus())) {
             throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_SHIP_ERROR);
         }
 
-        order.setOrderStatus(OrderStatusEnum.STATUS_SHIP.getStatus());
-        order.setShipSn(shipSn);
-        order.setShipChannel(shipChannel);
-        order.setShipTime(LocalDateTime.now());
-        order.setUpdateTime(new Date());
-        updateById(order);
+        // CAS 更新，防止并发重复发货
+        if (!this.lambdaUpdate()
+                .set(Order::getOrderStatus, OrderStatusEnum.STATUS_SHIP.getStatus())
+                .set(Order::getShipSn, shipSn)
+                .set(Order::getShipChannel, shipChannel)
+                .set(Order::getShipTime, LocalDateTime.now())
+                .set(Order::getUpdateTime, new Date())
+                .eq(Order::getId, orderId)
+                .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_PAY.getStatus())
+                .update()) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_SHIP_ERROR);
+        }
     }
 
     @Override

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wayn.common.core.mapper.shop.KeywordMapper">
+<mapper namespace="com.yuex.common.core.mapper.shop.KeywordMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="ShopKeywordResult" type="com.wayn.common.core.entity.shop.Keyword">
+    <resultMap id="ShopKeywordResult" type="com.yuex.common.core.entity.shop.Keyword">
         <result column="id"             property="id" />
         <result column="keyword"        property="keyword" />
         <result column="jump_type"      property="jumpType" />
@@ -23,7 +23,7 @@
         from shop_keyword
     </sql>
 
-    <select id="selectKeywordListPage" resultType="com.wayn.common.core.entity.shop.Keyword">
+    <select id="selectKeywordListPage" resultType="com.yuex.common.core.entity.shop.Keyword">
         <include refid="selectKeywordVo"/>
         <where>
             del_flag = 0

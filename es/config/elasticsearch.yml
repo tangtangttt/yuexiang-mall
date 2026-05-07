@@ -1,6 +1,6 @@
 cluster.name: "docker-cluster"
 network.host: 0.0.0.0
-http.port: 9200
+http.port: 9201
 # 开启es跨域
 http.cors.enabled: true
 http.cors.allow-origin: "*"

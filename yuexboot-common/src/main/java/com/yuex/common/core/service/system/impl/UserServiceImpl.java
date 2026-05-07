@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public String checkPhoneUnique(User user) {
         long userId = Objects.nonNull(user.getUserId()) ? user.getUserId() : 0;
         User info = getOne(new QueryWrapper<User>().eq("phone", user.getPhone()));
-        if (info != null && info.getUserId() != userId) {
+        if (info != null && !Objects.equals(info.getUserId(), userId)) {
             return SysConstants.NOT_UNIQUE;
         }
         return SysConstants.UNIQUE;
@@ -72,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public String checkEmailUnique(User user) {
         long userId = Objects.nonNull(user.getUserId()) ? user.getUserId() : 0;
         User info = getOne(new QueryWrapper<User>().eq("email", user.getEmail()));
-        if (info != null && info.getUserId() != userId) {
+        if (info != null && !Objects.equals(info.getUserId(), userId)) {
             return SysConstants.NOT_UNIQUE;
         }
         return SysConstants.UNIQUE;
@@ -131,8 +131,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                     user.setCreateTime(new Date());
                     user.setPassword(password);
                 }
-                this.saveBatch(list);
+                list.addAll(dataList);
             }));
+            this.saveBatch(list);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

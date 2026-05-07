@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wayn.common.core.mapper.shop.GoodsMapper">
+<mapper namespace="com.yuex.common.core.mapper.shop.GoodsMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="ShopGoodsResult" type="com.wayn.common.core.entity.shop.Goods">
+    <resultMap id="ShopGoodsResult" type="com.yuex.common.core.entity.shop.Goods">
         <result column="id"                 property="id" />
         <result column="goods_sn"           property="goodsSn" />
         <result column="name"               property="name" />
@@ -175,7 +175,7 @@
         </where>
         order by create_time desc
     </select>
-    <select id="selectGoodsListByIds" resultType="com.wayn.common.core.entity.shop.Goods">
+    <select id="selectGoodsListByIds" resultType="com.yuex.common.core.entity.shop.Goods">
         <include refid="goods_info"/>
         <where>
             id in (

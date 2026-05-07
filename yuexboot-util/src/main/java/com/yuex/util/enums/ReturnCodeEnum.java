@@ -32,6 +32,7 @@ public enum ReturnCodeEnum {
      * 56xx，工具错误
      * ...
      */
+    ORDER_PAY_ERROR(500, "订单支付失败"),
     CUSTOM_ERROR(5000, ""),
     ORDER_SUBMIT_ERROR(5001, "下单失败"),
     ORDER_NOT_EXISTS_ERROR(5002, "订单不存在"),

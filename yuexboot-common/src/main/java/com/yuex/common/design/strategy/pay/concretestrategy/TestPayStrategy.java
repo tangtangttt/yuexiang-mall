@@ -13,6 +13,8 @@ import com.yuex.common.design.strategy.pay.strategy.PayTypeInterface;
 import com.yuex.common.request.OrderPayReqVO;
 import com.yuex.common.response.OrderPayResVO;
 import com.yuex.util.enums.OrderStatusEnum;
+import com.yuex.util.enums.ReturnCodeEnum;
+import com.yuex.util.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -35,11 +37,21 @@ public class TestPayStrategy implements PayTypeInterface {
     @Override
     public OrderPayResVO pay(OrderPayReqVO reqVo) {
         Order order = orderService.getOne(new QueryWrapper<Order>().eq("order_sn", reqVo.getOrderSn()));
-        order.setPayId(NanoId.randomNanoId());
-        order.setPayTime(LocalDateTime.now());
-        order.setOrderStatus(OrderStatusEnum.STATUS_PAY.getStatus());
-        order.setUpdateTime(new Date());
-        orderService.updateById(order);
+        if (order == null) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_NOT_EXISTS_ERROR);
+        }
+        // CAS 条件更新，防止重复支付导致虚拟销量重复累加
+        boolean updated = orderService.lambdaUpdate()
+                .set(Order::getPayId, NanoId.randomNanoId())
+                .set(Order::getPayTime, LocalDateTime.now())
+                .set(Order::getOrderStatus, OrderStatusEnum.STATUS_PAY.getStatus())
+                .set(Order::getUpdateTime, new Date())
+                .eq(Order::getId, order.getId())
+                .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_CREATE.getStatus())
+                .update();
+        if (!updated) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_PAY_ERROR, "订单已支付或状态异常");
+        }
         updateVirtualSales(order.getId());
         return new OrderPayResVO();
     }

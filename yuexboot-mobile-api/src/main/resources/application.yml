@@ -30,8 +30,8 @@ spring:
 token:
   # 令牌自定义标识
   header: Authorization
-  # 令牌秘钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌秘钥（生产环境请务必替换为高强度随机字符串，建议使用 32 位以上字母数字混合）
+  secret: yuexboot-mall-jwt-secret-key-2024
   # 登录会话 & JWT 有效期（单位：分钟，与 Redis 中 login token TTL 一致）
   expireTime: 30
 

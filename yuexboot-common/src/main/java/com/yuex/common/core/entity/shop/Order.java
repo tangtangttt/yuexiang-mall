@@ -108,7 +108,7 @@ public class Order extends ShopBaseEntity implements Serializable {
     /**
      * 付款时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime payTime;
 
     /**
@@ -124,7 +124,7 @@ public class Order extends ShopBaseEntity implements Serializable {
     /**
      * 发货开始时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime shipTime;
 
     /**
@@ -150,13 +150,13 @@ public class Order extends ShopBaseEntity implements Serializable {
     /**
      * 退款时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime refundTime;
 
     /**
      * 用户确认收货时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime confirmTime;
 
     /**
@@ -167,7 +167,7 @@ public class Order extends ShopBaseEntity implements Serializable {
     /**
      * 订单关闭时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime orderEndTime;
 
     /**

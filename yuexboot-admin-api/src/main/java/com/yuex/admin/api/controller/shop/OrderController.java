@@ -15,6 +15,10 @@ import com.yuex.common.request.OrderRefundReqVO;
 import com.yuex.common.request.ShipRequestVO;
 import com.yuex.common.response.OrderDetailResVO;
 import com.yuex.common.response.OrderManagerResVO;
+import com.yuex.common.util.OrderHandleOption;
+import com.yuex.common.util.OrderUtil;
+import com.yuex.util.enums.ReturnCodeEnum;
+import com.yuex.util.exception.BusinessException;
 import com.yuex.util.util.R;
 import com.yuex.util.util.excel.ExcelUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -80,6 +84,14 @@ public class OrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shop:order:delete')")
     @DeleteMapping("{orderId}")
     public R<Boolean> deleteOrder(@PathVariable Long orderId) {
+        Order order = iOrderService.getById(orderId);
+        if (order == null) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_NOT_EXISTS_ERROR);
+        }
+        OrderHandleOption handleOption = OrderUtil.build(order);
+        if (!handleOption.isDelete()) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_DELETE_ERROR);
+        }
         return R.result(iOrderService.removeById(orderId));
     }
 

@@ -6,7 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yuex.common.base.controller.BaseController;
-import com.yuex.common.config.yuexConfig;
+import com.yuex.common.config.YuexConfig;
 import com.yuex.common.core.entity.shop.Cart;
 import com.yuex.common.core.entity.shop.ShopMemberCoupon;
 import com.yuex.common.core.service.shop.ICartService;
@@ -15,6 +15,7 @@ import com.yuex.common.response.CartResponseVO;
 import com.yuex.common.response.CheckedGoodsResVO;
 import com.yuex.common.response.MemberCouponResVO;
 import com.yuex.mobile.framework.security.util.MobileSecurityUtils;
+import com.yuex.util.enums.ReturnCodeEnum;
 import com.yuex.util.util.R;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 购物车接口
@@ -82,6 +84,12 @@ public class CartController extends BaseController {
      */
     @PutMapping
     public R<Boolean> update(@RequestBody Cart cart) {
+        Long userId = MobileSecurityUtils.getUserId();
+        // 校验购物车项归属当前用户，防止越权修改
+        Cart existing = iCartService.getById(cart.getId());
+        if (existing == null || !Objects.equals(existing.getUserId(), Math.toIntExact(userId))) {
+            return R.error(ReturnCodeEnum.ORDER_SUBMIT_ERROR.getCode(), "购物车数据无效");
+        }
         return R.result(iCartService.updateById(cart));
     }
 
@@ -105,6 +113,12 @@ public class CartController extends BaseController {
      */
     @DeleteMapping("{cartId}")
     public R<Boolean> delete(@PathVariable Long cartId) {
+        Long userId = MobileSecurityUtils.getUserId();
+        // 校验购物车项归属当前用户，防止越权删除
+        Cart existing = iCartService.getById(cartId);
+        if (existing == null || !Objects.equals(existing.getUserId(), Math.toIntExact(userId))) {
+            return R.error(ReturnCodeEnum.ORDER_SUBMIT_ERROR.getCode(), "购物车数据无效");
+        }
         return R.result(iCartService.removeById(cartId));
     }
 
@@ -138,8 +152,8 @@ public class CartController extends BaseController {
 
         // 根据订单商品总价计算运费，满足条件（例如88元）则免运费，否则需要支付运费（例如8元）；
         BigDecimal freightPrice = BigDecimal.ZERO;
-        if (goodsAmount.compareTo(yuexConfig.getFreightLimit()) < 0) {
-            freightPrice = yuexConfig.getFreightPrice();
+        if (goodsAmount.compareTo(YuexConfig.getFreightLimit()) < 0) {
+            freightPrice = YuexConfig.getFreightPrice();
         }
         goodsAmount = goodsAmount.add(freightPrice);
         // 查询可用优惠券列表
@@ -148,9 +162,9 @@ public class CartController extends BaseController {
                 .list();
         BigDecimal finalGoodsAmount = goodsAmount;
         orderActualAmount = goodsAmount.max(BigDecimal.ZERO);
-        memberCoupons = memberCoupons.stream().filter(item -> item.getUseStatus() == 0
-                        && DateUtil.compare(item.getExpireTime(), nowTime) > 0
-                        && finalGoodsAmount.compareTo(new BigDecimal(item.getMin())) >= 0)
+        memberCoupons = memberCoupons.stream().filter(item -> Objects.equals(item.getUseStatus(), 0)
+                        && item.getExpireTime() != null && DateUtil.compare(item.getExpireTime(), nowTime) > 0
+                        && item.getMin() != null && finalGoodsAmount.compareTo(new BigDecimal(item.getMin())) >= 0)
                 .toList();
         if (!memberCoupons.isEmpty()) {
             memberCoupons = memberCoupons.stream().sorted(Comparator.comparingInt(ShopMemberCoupon::getDiscount).reversed()).toList();

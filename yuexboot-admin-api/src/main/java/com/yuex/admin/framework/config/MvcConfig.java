@@ -1,6 +1,6 @@
 package com.yuex.admin.framework.config;
 
-import com.yuex.common.config.yuexConfig;
+import com.yuex.common.config.YuexConfig;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 本地文件上传路径
-        registry.addResourceHandler("/upload/**").addResourceLocations("file:" + yuexConfig.getUploadDir() + "/");
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:" + YuexConfig.getUploadDir() + "/");
     }
 
     @Bean

@@ -22,7 +22,7 @@ public interface ShopCouponMapper extends BaseMapper<ShopCoupon> {
 
     IPage<MemberCouponResVO> myList(Page<ShopCoupon> page, Long userId);
 
-    void updateReceiveNum(Integer couponId);
+    int updateReceiveNum(Integer couponId);
 }
 
 

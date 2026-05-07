@@ -63,7 +63,7 @@ public interface IMobileOrderService extends IService<Order> {
      * @param orderId 订单ID
      * @return void
      */
-    void refund(Long orderId);
+    void refund(Long orderId, Long userId);
 
     /**
      * 取消订单
@@ -76,7 +76,7 @@ public interface IMobileOrderService extends IService<Order> {
      * @param orderId 订单ID
      * @return r
      */
-    void cancel(Long orderId);
+    void cancel(Long orderId, Long userId);
 
     /**
      * 删除订单
@@ -85,9 +85,10 @@ public interface IMobileOrderService extends IService<Order> {
      * 2. 删除订单。
      *
      * @param orderId 订单ID
+     * @param userId  当前用户ID
      * @return r
      */
-    void delete(Long orderId);
+    void delete(Long orderId, Long userId);
 
     /**
      * 确认订单
@@ -96,9 +97,10 @@ public interface IMobileOrderService extends IService<Order> {
      * 2. 更改订单状态为已收货。
      *
      * @param orderId 订单ID
+     * @param userId  当前用户ID
      * @return r
      */
-    void confirm(Long orderId);
+    void confirm(Long orderId, Long userId);
 
     /**
      * 查询用户订单各状态数量（包含待支付订单数量、代发货订单数量、待收货订单数量、待评价订单数量）
@@ -107,7 +109,7 @@ public interface IMobileOrderService extends IService<Order> {
      */
     OrderStatusCountResVO statusCount(Long userId);
 
-    OrderDetailVO getOrderDetailByOrderSn(String orderSn);
+    OrderDetailVO getOrderDetailByOrderSn(String orderSn, Long userId);
 
     /**
      * 检查订单操作是否合法

@@ -51,15 +51,21 @@ public class OrderUnpaidServiceImpl extends ServiceImpl<OrderMapper, Order> impl
                 if (!OrderUtil.isCreateStatus(order)) {
                     return;
                 }
-                Long orderId = order.getId();
-                // 设置订单为已取消状态
-                order.setOrderStatus(statusAutoCancel.getStatus());
-                order.setOrderEndTime(LocalDateTime.now());
-                order.setUpdateTime(new Date());
-                if (!orderService.updateById(order)) {
-                    log.info("订单编号：{} 更新订单状态失败", orderSn);
-                    throw new RuntimeException("更新订单状态失败");
+                // 使用 CAS 原子更新，避免支付回调与超时取消并发导致状态覆盖
+                boolean updated = orderService.lambdaUpdate()
+                        .set(Order::getOrderStatus, statusAutoCancel.getStatus())
+                        .set(Order::getOrderEndTime, LocalDateTime.now())
+                        .set(Order::getUpdateTime, new Date())
+                        .eq(Order::getOrderSn, orderSn)
+                        .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_CREATE.getStatus())
+                        .update();
+                if (!updated) {
+                    log.info("订单编号：{} CAS更新失败，订单状态已变更（可能已支付），跳过取消", orderSn);
+                    return;
                 }
+
+                // 获取订单ID（CAS成功后重新获取完整订单）
+                Long orderId = order.getId();
 
                 // 商品货品数量增加（DB 回滚）
                 List<OrderGoods> orderGoodsList = orderGoodsService.list(Wrappers.lambdaQuery(OrderGoods.class)

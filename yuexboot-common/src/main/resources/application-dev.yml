@@ -59,7 +59,7 @@ sms:
 es:
   config:
     host: 127.0.0.1
-    port: 9200
+    port: 9201
     username: 
     password: 
     scheme: http

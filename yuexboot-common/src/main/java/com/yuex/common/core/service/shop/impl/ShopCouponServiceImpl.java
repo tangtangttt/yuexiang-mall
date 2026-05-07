@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Administrator
@@ -95,7 +96,7 @@ public class ShopCouponServiceImpl extends ServiceImpl<ShopCouponMapper, ShopCou
         if (shopCoupon == null) {
             throw new BusinessException(ReturnCodeEnum.ERROR, "优惠券不存在");
         }
-        if (shopCoupon.getStatus() != 1) {
+        if (!Objects.equals(shopCoupon.getStatus(), 1)) {
             throw new BusinessException(ReturnCodeEnum.ERROR, "优惠券未上架");
         }
         if (DateUtil.compare(shopCoupon.getExpireTime(), new Date()) < 0) {
@@ -120,7 +121,11 @@ public class ShopCouponServiceImpl extends ServiceImpl<ShopCouponMapper, ShopCou
         entity.setUseStatus(0);
         entity.setExpireTime(shopCoupon.getExpireTime());
         entity.setCreateTime(new Date());
-        shopCouponMapper.updateReceiveNum(couponId);
+        // 使用 CAS 原子更新领取数量，防止并发超发
+        int affectedRows = shopCouponMapper.updateReceiveNum(couponId);
+        if (affectedRows == 0) {
+            throw new BusinessException(ReturnCodeEnum.ERROR, "优惠券已经领完啦");
+        }
         return shopMemberCouponService.save(entity);
     }
 

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yuex.common.config.yuexConfig;
+import com.yuex.common.config.YuexConfig;
 import com.yuex.common.core.entity.shop.*;
 import com.yuex.common.core.mapper.shop.OrderMapper;
 import com.yuex.common.core.service.shop.*;
@@ -143,11 +143,11 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
     }
 
     @Override
-    public OrderDetailVO getOrderDetailByOrderSn(String orderSn) {
+    public OrderDetailVO getOrderDetailByOrderSn(String orderSn, Long userId) {
         LambdaQueryWrapper<Order> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Order::getOrderSn, orderSn);
         Order order = getOne(queryWrapper);
-        if (order == null) {
+        if (order == null || !Objects.equals(order.getUserId(), userId)) {
             throw new BusinessException(ReturnCodeEnum.ORDER_NOT_EXISTS_ERROR);
         }
         OrderDetailVO orderDetailVO = new OrderDetailVO();
@@ -173,14 +173,17 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
         // 记录预扣减成功的商品，用于异常回滚
         List<Map.Entry<Long, Integer>> deductedEntries = new ArrayList<>();
 
+        OrderDTO orderDTO = new OrderDTO();
+        MyBeanUtil.copyProperties(orderCommitReqVO, orderDTO);
+        Long addressId = orderDTO.getAddressId();
+        Long userCouponId = orderDTO.getUserCouponId();
+        orderDTO.setUserId(userId);
         try {
-            OrderDTO orderDTO = new OrderDTO();
-            MyBeanUtil.copyProperties(orderCommitReqVO, orderDTO);
-            Long addressId = orderDTO.getAddressId();
-            Long userCouponId = orderDTO.getUserCouponId();
-            orderDTO.setUserId(userId);
+            if (Objects.isNull(addressId)) {
+                throw new BusinessException(ReturnCodeEnum.ORDER_ERROR_ADDRESS_ERROR);
+            }
             Address address = iAddressService.getById(addressId);
-            if (!Objects.equals(address.getMemberId(), userId)) {
+            if (address == null || !Objects.equals(address.getMemberId(), userId)) {
                 throw new BusinessException(ReturnCodeEnum.ORDER_ERROR_ADDRESS_ERROR);
             }
 
@@ -242,8 +245,8 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
 
             // 根据订单商品总价计算运费，满足条件（例如88元）则免运费，否则需要支付运费（例如8元）；
             BigDecimal freightPrice = BigDecimal.ZERO;
-            if (checkedGoodsPrice.compareTo(yuexConfig.getFreightLimit()) < 0) {
-                freightPrice = yuexConfig.getFreightPrice();
+            if (checkedGoodsPrice.compareTo(YuexConfig.getFreightLimit()) < 0) {
+                freightPrice = YuexConfig.getFreightPrice();
             }
 
             // 订单费用
@@ -253,14 +256,23 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
             BigDecimal couponPrice = BigDecimal.ZERO;
             if (userCouponId != null) {
                 ShopMemberCoupon memberCoupon = shopMemberCouponService.getById(userCouponId);
-                if (memberCoupon == null || memberCoupon.getUserId() != Math.toIntExact(userId)) {
+                if (memberCoupon == null || !Objects.equals(memberCoupon.getUserId(), Math.toIntExact(userId))) {
                     throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "优惠卷错误");
                 }
-                if (memberCoupon.getUseStatus() != 0 || DateUtil.compare(memberCoupon.getExpireTime(), new Date()) < 0) {
+                if (!Objects.equals(memberCoupon.getUseStatus(), 0) || DateUtil.compare(memberCoupon.getExpireTime(), new Date()) < 0) {
                     throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "优惠卷不可用");
                 }
-                if (memberCoupon.getMin() > orderTotalPrice.intValue()) {
+                if (memberCoupon.getMin() != null && memberCoupon.getMin() > orderTotalPrice.intValue()) {
                     throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "优惠卷使用门槛未达到");
+                }
+                // CAS 预锁定优惠券，防止并发重复使用
+                boolean couponLocked = shopMemberCouponService.lambdaUpdate()
+                        .set(ShopMemberCoupon::getUseStatus, 1)
+                        .eq(ShopMemberCoupon::getId, userCouponId)
+                        .eq(ShopMemberCoupon::getUseStatus, 0)
+                        .update();
+                if (!couponLocked) {
+                    throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "优惠卷已被使用");
                 }
                 couponPrice = BigDecimal.valueOf(memberCoupon.getDiscount());
             }
@@ -275,7 +287,7 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
             CorrelationData correlationData = new CorrelationData(uid);
             Map<String, Object> map = new HashMap<>();
             map.put("order", orderDTO);
-            map.put("notifyUrl", yuexConfig.getMobileUrl() + "/callback/order/submit");
+            map.put("notifyUrl", YuexConfig.getMobileUrl() + "/callback/order/submit");
             try {
                 Message message = MessageBuilder
                         .withBody(JSON.toJSONString(map).getBytes(Constants.UTF_ENCODING))
@@ -283,8 +295,13 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
                         .setDeliveryMode(MessageDeliveryMode.PERSISTENT)
                         .build();
                 rabbitTemplate.convertAndSend(MQConstants.ORDER_DIRECT_EXCHANGE, MQConstants.ORDER_DIRECT_ROUTING, message, correlationData);
-            } catch (UnsupportedEncodingException e) {
-                log.error(e.getMessage(), e);
+            } catch (Exception e) {
+                log.error("MQ发送失败，回滚预扣减库存和优惠券，orderSn：{}", orderSn, e);
+                rollbackDeductedStock(deductedEntries);
+                if (userCouponId != null) {
+                    rollbackCoupon(userCouponId);
+                }
+                throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "下单失败，请重试");
             }
             SubmitOrderResVO resVO = new SubmitOrderResVO();
             resVO.setActualPrice(actualPrice);
@@ -293,10 +310,17 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
         } catch (BusinessException e) {
             // 业务异常时回滚已预扣减的库存
             rollbackDeductedStock(deductedEntries);
+            // 同时回滚已预锁定的优惠券
+            if (userCouponId != null) {
+                rollbackCoupon(userCouponId);
+            }
             throw e;
         } catch (Exception e) {
             // 其他异常回滚
             rollbackDeductedStock(deductedEntries);
+            if (userCouponId != null) {
+                rollbackCoupon(userCouponId);
+            }
             throw e;
         } finally {
             // 释放用户级分布式锁
@@ -330,6 +354,9 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
             throw new BusinessException(ReturnCodeEnum.ORDER_ERROR_ADDRESS_ERROR);
         }
         checkedAddress = iAddressService.getById(addressId);
+        if (checkedAddress == null || !Objects.equals(checkedAddress.getMemberId(), userId)) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_ERROR_ADDRESS_ERROR);
+        }
 
         // 获取用户订单商品，为空默认取购物车已选中商品
         List<Long> cartIdArr = orderDTO.getCartIdArr();
@@ -360,29 +387,34 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
                 Long productId = checkGoods.getProductId();
                 Long goodsId = checkGoods.getGoodsId();
                 GoodsProduct product = goodsIdMap.get(productId);
-                if (product != null) {
-                    int remainNumber = product.getNumber() - checkGoods.getNumber();
-                    if (remainNumber < 0) {
-                        // DB 库存不足，回滚当前请求已扣减的 Redis 预扣减库存
-                        rollbackDeductedStock(dbDeductedEntries);
-                        Goods goods = iGoodsService.getById(goodsId);
-                        String goodsName = goods.getName();
-                        String[] specifications = product.getSpecifications();
-                        stringRedisCache.setCacheObject(ORDER_RESULT_KEY.getKey(orderSn),
-                                String.format(ReturnCodeEnum.ORDER_ERROR_STOCK_NOT_ENOUGH.getMsg(), goodsName, StringUtils.join(specifications, " ")),
-                                ORDER_RESULT_KEY.getExpireSecond());
-                        throw new BusinessException(String.format(ReturnCodeEnum.ORDER_ERROR_STOCK_NOT_ENOUGH.getMsg(),
-                                goodsName, StringUtils.join(specifications, " ")));
-                    }
-                    if (!iGoodsProductService.reduceStock(productId, checkGoods.getNumber())) {
-                        rollbackDeductedStock(dbDeductedEntries);
-                        stringRedisCache.setCacheObject(ORDER_RESULT_KEY.getKey(orderSn),
-                                ReturnCodeEnum.ORDER_SUBMIT_ERROR.getMsg(),
-                                ORDER_RESULT_KEY.getExpireSecond());
-                        throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR);
-                    }
-                    dbDeductedEntries.add(Map.entry(productId, checkGoods.getNumber()));
+                if (product == null) {
+                    rollbackDeductedStock(dbDeductedEntries);
+                    stringRedisCache.setCacheObject(ORDER_RESULT_KEY.getKey(orderSn),
+                            ReturnCodeEnum.ORDER_SUBMIT_ERROR.getMsg(),
+                            ORDER_RESULT_KEY.getExpireSecond());
+                    throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "商品规格不存在");
                 }
+                int remainNumber = product.getNumber() - checkGoods.getNumber();
+                if (remainNumber < 0) {
+                    // DB 库存不足，回滚当前请求已扣减的 Redis 预扣减库存
+                    rollbackDeductedStock(dbDeductedEntries);
+                    Goods goods = iGoodsService.getById(goodsId);
+                    String goodsName = goods.getName();
+                    String[] specifications = product.getSpecifications();
+                    stringRedisCache.setCacheObject(ORDER_RESULT_KEY.getKey(orderSn),
+                            String.format(ReturnCodeEnum.ORDER_ERROR_STOCK_NOT_ENOUGH.getMsg(), goodsName, StringUtils.join(specifications, " ")),
+                            ORDER_RESULT_KEY.getExpireSecond());
+                    throw new BusinessException(String.format(ReturnCodeEnum.ORDER_ERROR_STOCK_NOT_ENOUGH.getMsg(),
+                            goodsName, StringUtils.join(specifications, " ")));
+                }
+                if (!iGoodsProductService.reduceStock(productId, checkGoods.getNumber())) {
+                    rollbackDeductedStock(dbDeductedEntries);
+                    stringRedisCache.setCacheObject(ORDER_RESULT_KEY.getKey(orderSn),
+                            ReturnCodeEnum.ORDER_SUBMIT_ERROR.getMsg(),
+                            ORDER_RESULT_KEY.getExpireSecond());
+                    throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR);
+                }
+                dbDeductedEntries.add(Map.entry(productId, checkGoods.getNumber()));
             }
         } catch (BusinessException e) {
             // DB 扣减失败，额外回滚 asyncSubmit 中预扣减的所有 Redis 库存
@@ -390,6 +422,10 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
                     .map(c -> Map.entry(c.getProductId(), c.getNumber()))
                     .collect(Collectors.toList());
             rollbackDeductedStock(allPreDeducted);
+            // 回滚 asyncSubmit 中预锁定的优惠券，防止优惠券永久锁定
+            if (userCouponId != null) {
+                rollbackCoupon(userCouponId);
+            }
             throw e;
         }
 
@@ -401,8 +437,8 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
 
         // 根据订单商品总价计算运费，满足条件（例如88元）则免运费，否则需要支付运费（例如8元）；
         BigDecimal freightPrice = new BigDecimal("0.00");
-        if (checkedGoodsPrice.compareTo(yuexConfig.getFreightLimit()) < 0) {
-            freightPrice = yuexConfig.getFreightPrice();
+        if (checkedGoodsPrice.compareTo(YuexConfig.getFreightLimit()) < 0) {
+            freightPrice = YuexConfig.getFreightPrice();
         }
 
         // 订单费用
@@ -412,6 +448,19 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
         BigDecimal couponPrice = BigDecimal.ZERO;
         if (userCouponId != null) {
             ShopMemberCoupon memberCoupon = shopMemberCouponService.getById(userCouponId);
+            if (memberCoupon == null || !Objects.equals(memberCoupon.getUserId(), Math.toIntExact(userId))) {
+                // 优惠券不属于当前用户，释放已预锁定的优惠券
+                rollbackCoupon(userCouponId);
+                throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "优惠卷错误");
+            }
+            if (!Objects.equals(memberCoupon.getUseStatus(), 1) || DateUtil.compare(memberCoupon.getExpireTime(), new Date()) < 0) {
+                rollbackCoupon(userCouponId);
+                throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "优惠卷不可用");
+            }
+            if (memberCoupon.getMin() != null && memberCoupon.getMin() > orderTotalPrice.intValue()) {
+                rollbackCoupon(userCouponId);
+                throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "优惠卷使用门槛未达到");
+            }
             couponPrice = BigDecimal.valueOf(memberCoupon.getDiscount());
         }
 
@@ -466,13 +515,12 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
         } else {
             iCartService.removeByIds(cartIdArr);
         }
-        // 修改优惠卷使用状态
+        // 绑定优惠券与订单ID（优惠券已在 asyncSubmit 中预锁定为 useStatus=1）
         if (userCouponId != null) {
             shopMemberCouponService.lambdaUpdate()
-                    .set(ShopMemberCoupon::getUseStatus, 1)
                     .set(ShopMemberCoupon::getOrderId, orderId)
                     .eq(ShopMemberCoupon::getId, userCouponId)
-                    .eq(ShopMemberCoupon::getUseStatus, 0)
+                    .eq(ShopMemberCoupon::getUseStatus, 1)
                     .update();
         }
 
@@ -483,14 +531,14 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
                 try {
                     Map<String, Object> map = new HashMap<>();
                     map.put("orderSn", orderDTO.getOrderSn());
-                    map.put("notifyUrl", yuexConfig.getMobileUrl() + "/callback/order/unpaid");
+                    map.put("notifyUrl", YuexConfig.getMobileUrl() + "/callback/order/unpaid");
                     Message message = MessageBuilder
                             .withBody(JSON.toJSONString(map).getBytes(Constants.UTF_ENCODING))
                             .setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN)
                             .setDeliveryMode(MessageDeliveryMode.PERSISTENT)
                             .build();
                     delayRabbitTemplate.convertAndSend(MQConstants.ORDER_DELAY_EXCHANGE, MQConstants.ORDER_DELAY_ROUTING, message, messagePostProcessor -> {
-                        long delayTime = yuexConfig.getUnpaidOrderCancelDelayTime() * DateUnit.MINUTE.getMillis();
+                        long delayTime = YuexConfig.getUnpaidOrderCancelDelayTime() * DateUnit.MINUTE.getMillis();
                         messagePostProcessor.getMessageProperties().setDelay(Math.toIntExact(delayTime));
                         return messagePostProcessor;
                     });
@@ -507,6 +555,12 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
             if (c.getUserId() == null || !Objects.equals(c.getUserId(), uid)) {
                 throw new BusinessException(ReturnCodeEnum.ORDER_SUBMIT_ERROR, "购物车数据无效");
             }
+        }
+    }
+
+    private static void validateOrderOwnership(Order order, Long userId) {
+        if (order == null || !Objects.equals(order.getUserId(), userId)) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_NOT_EXISTS_ERROR);
         }
     }
 
@@ -527,6 +581,24 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
         }
     }
 
+    /**
+     * 回滚已预锁定的优惠券（将 useStatus 从 1 恢复为 0）
+     *
+     * @param userCouponId 优惠券ID
+     */
+    private void rollbackCoupon(Long userCouponId) {
+        try {
+            shopMemberCouponService.lambdaUpdate()
+                    .set(ShopMemberCoupon::getUseStatus, 0)
+                    .eq(ShopMemberCoupon::getId, userCouponId)
+                    .eq(ShopMemberCoupon::getUseStatus, 1)
+                    .update();
+            log.info("回滚优惠券: couponId={}", userCouponId);
+        } catch (Exception ex) {
+            log.error("回滚优惠券失败: couponId={}", userCouponId, ex);
+        }
+    }
+
     @Override
     public String searchResult(String orderSn) {
         // 回调里存的是 JSON 字符串，getCacheObject(key) 会按 Object 反序列化成 LinkedHashMap，不能直接强转为 String
@@ -542,8 +614,9 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
 
 
     @Override
-    public void refund(Long orderId) {
+    public void refund(Long orderId, Long userId) {
         Order order = this.getById(orderId);
+        validateOrderOwnership(order, userId);
         ReturnCodeEnum returnCodeEnum = this.checkOrderOperator(order);
         if (!ReturnCodeEnum.SUCCESS.equals(returnCodeEnum)) {
             throw new BusinessException(returnCodeEnum);
@@ -554,28 +627,31 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
             throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_REFUND_ERROR);
         }
 
-        // 设置订单申请退款状态
+        // 使用 CAS 原子更新，防止并发重复申请退款
         if (!this.lambdaUpdate()
                 .set(Order::getOrderStatus, OrderStatusEnum.STATUS_REFUND.getStatus())
                 .set(Order::getUpdateTime, new Date())
                 .set(Order::getRefundStatus, 1)
                 .eq(Order::getId, orderId)
+                .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_PAY.getStatus())
                 .update()) {
-            throw new BusinessException(ReturnCodeEnum.ERROR);
+            throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_REFUND_ERROR);
         }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void cancel(Long orderId) {
+    public void cancel(Long orderId, Long userId) {
         Order order = getById(orderId);
+        validateOrderOwnership(order, userId);
         orderUnpaidService.unpaid(order.getOrderSn(), OrderStatusEnum.STATUS_CANCEL);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long orderId) {
+    public void delete(Long orderId, Long userId) {
         Order order = getById(orderId);
+        validateOrderOwnership(order, userId);
         ReturnCodeEnum returnCodeEnum = checkOrderOperator(order);
         if (!ReturnCodeEnum.SUCCESS.equals(returnCodeEnum)) {
             throw new BusinessException(returnCodeEnum);
@@ -585,15 +661,21 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
         if (!handleOption.isDelete()) {
             throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_DELETE_ERROR);
         }
-        // 删除订单
-        removeById(orderId);
+        // 删除订单，增加状态 CAS 校验防止并发误删
+        if (!this.lambdaUpdate()
+                .eq(Order::getId, orderId)
+                .eq(Order::getOrderStatus, order.getOrderStatus())
+                .remove()) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_DELETE_ERROR);
+        }
         // 删除订单商品
         iOrderGoodsService.remove(new QueryWrapper<OrderGoods>().eq("order_id", orderId));
     }
 
     @Override
-    public void confirm(Long orderId) {
+    public void confirm(Long orderId, Long userId) {
         Order order = getById(orderId);
+        validateOrderOwnership(order, userId);
         ReturnCodeEnum returnCodeEnum = checkOrderOperator(order);
         if (!ReturnCodeEnum.SUCCESS.equals(returnCodeEnum)) {
             throw new BusinessException(returnCodeEnum);
@@ -603,11 +685,16 @@ public class MobileOrderServiceImpl extends ServiceImpl<OrderMapper, Order> impl
         if (!handleOption.isConfirm()) {
             throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_CONFIRM_ERROR);
         }
-        // 更改订单状态为已收货
-        order.setOrderStatus(OrderStatusEnum.STATUS_CONFIRM.getStatus());
-        order.setConfirmTime(LocalDateTime.now());
-        order.setUpdateTime(new Date());
-        updateById(order);
+        // 使用 CAS 原子更新，防止并发重复确认收货
+        if (!this.lambdaUpdate()
+                .set(Order::getOrderStatus, OrderStatusEnum.STATUS_CONFIRM.getStatus())
+                .set(Order::getConfirmTime, LocalDateTime.now())
+                .set(Order::getUpdateTime, new Date())
+                .eq(Order::getId, orderId)
+                .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_SHIP.getStatus())
+                .update()) {
+            throw new BusinessException(ReturnCodeEnum.ORDER_CANNOT_CONFIRM_ERROR);
+        }
     }
 
     @Override

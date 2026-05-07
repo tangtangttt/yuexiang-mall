@@ -3,8 +3,8 @@
     {
       "name": "spring.datasource.master",
       "type": "javax.sql.DataSource",
-      "sourceType": "com.wayn.mobile.framework.config.HikariCpConfig",
-      "sourceMethod": "public javax.sql.DataSource masterDataSource() "
+      "sourceType": "com.yuex.mobile.framework.config.HikariCpConfig",
+      "sourceMethod": "masterDataSource()"
     }
   ],
   "properties": [],

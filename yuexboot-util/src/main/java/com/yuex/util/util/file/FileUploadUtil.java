@@ -4,6 +4,7 @@ import com.yuex.util.exception.BusinessException;
 import com.yuex.util.util.date.DateUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +36,9 @@ public class FileUploadUtil {
         if (StringUtils.isEmpty(extension)) {
             extension = MimeTypeUtils.getExtension(Objects.requireNonNull(file.getContentType()));
         }
+        if (!ArrayUtils.contains(MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, StringUtils.lowerCase(extension))) {
+            throw new BusinessException("文件格式不正确，仅支持：" + StringUtils.join(MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, ", "));
+        }
         String encodingFilename = FileUtils.encodingFilename(fileName);
         fileName = genNewFilename(encodingFilename, extension);
         File desc = new File(filePath, fileName);
@@ -60,8 +64,11 @@ public class FileUploadUtil {
         if (fileNameLength > 100) {
             throw new BusinessException("文件名称过长");
         }
-        String encodingFilename = FileUtils.encodingFilename(fileName);
         String extension = FilenameUtils.getExtension(fileName);
+        if (!ArrayUtils.contains(MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, StringUtils.lowerCase(extension))) {
+            throw new BusinessException("文件格式不正确，仅支持：" + StringUtils.join(MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, ", "));
+        }
+        String encodingFilename = FileUtils.encodingFilename(fileName);
         fileName = genNewFilename(encodingFilename, extension);
         File desc = new File(filePath, fileName);
         if (!desc.getParentFile().exists()) {

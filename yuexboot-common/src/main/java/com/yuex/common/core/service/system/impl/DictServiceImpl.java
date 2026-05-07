@@ -68,7 +68,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         return dictMapper.selectDictTypeList(dict);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteDictTypeById(List<Long> dictIds) {
         for (Long dictId : dictIds) {

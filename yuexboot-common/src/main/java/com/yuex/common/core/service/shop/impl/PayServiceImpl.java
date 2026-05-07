@@ -134,13 +134,19 @@ public class PayServiceImpl implements IPayService {
                 return WxPayNotifyResponse.fail("支付金额不符合");
             }
 
-            order.setPayId(payId);
-            order.setPayTime(LocalDateTime.now());
-            order.setOrderStatus(OrderStatusEnum.STATUS_PAY.getStatus());
-            order.setUpdateTime(new Date());
-            if (!orderService.updateById(order)) {
-                log.error("微信支付回调: 更新订单状态失败，order：{}", JSON.toJSONString(order.getOrderSn()));
-                return WxPayNotifyResponse.fail("更新订单状态失败");
+            // 使用 CAS 原子更新，避免并发回调重复标记已支付
+            boolean updated = orderService.lambdaUpdate()
+                    .set(Order::getPayId, payId)
+                    .set(Order::getPayTime, LocalDateTime.now())
+                    .set(Order::getOrderStatus, OrderStatusEnum.STATUS_PAY.getStatus())
+                    .set(Order::getUpdateTime, new Date())
+                    .eq(Order::getOrderSn, orderNo)
+                    .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_CREATE.getStatus())
+                    .update();
+            if (!updated) {
+                // CAS 失败：订单已非待支付状态（可能已被并发回调或取消），幂等返回成功
+                log.info("微信支付回调：CAS更新失败，订单状态已变更，orderSn：{}", orderNo);
+                return WxPayNotifyResponse.success("OK");
             }
             updateVirtualSales(order.getId());
             return WxPayNotifyResponse.success("处理成功!");
@@ -246,12 +252,17 @@ public class PayServiceImpl implements IPayService {
     }
 
     private void markAlipayOrderPaid(Order order, String tradeNo) {
-        order.setPayId(tradeNo);
-        order.setPayTime(LocalDateTime.now());
-        order.setOrderStatus(OrderStatusEnum.STATUS_PAY.getStatus());
-        order.setUpdateTime(new Date());
-        if (!orderService.updateById(order)) {
-            log.error("支付宝更新订单状态失败，orderSn：{}", order.getOrderSn());
+        // 使用 CAS 原子更新，避免并发回调重复标记已支付
+        boolean updated = orderService.lambdaUpdate()
+                .set(Order::getPayId, tradeNo)
+                .set(Order::getPayTime, LocalDateTime.now())
+                .set(Order::getOrderStatus, OrderStatusEnum.STATUS_PAY.getStatus())
+                .set(Order::getUpdateTime, new Date())
+                .eq(Order::getId, order.getId())
+                .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_CREATE.getStatus())
+                .update();
+        if (!updated) {
+            log.info("支付宝更新订单状态CAS失败，订单状态已变更，orderSn：{}", order.getOrderSn());
             throw new BusinessException(ReturnCodeEnum.ORDER_SET_PAY_ERROR);
         }
         updateVirtualSales(order.getId());
@@ -284,13 +295,26 @@ public class PayServiceImpl implements IPayService {
                 log.info("易支付回调：订单已支付，幂等返回 success，orderSn：{}", orderSn);
                 return "success";
             }
-            order.setPayId(tradeNo);
-            order.setPayTime(LocalDateTime.now());
-            order.setOrderStatus(OrderStatusEnum.STATUS_PAY.getStatus());
-            order.setUpdateTime(new Date());
-            if (!orderService.updateById(order)) {
-                log.error("易支付回调: 更新订单状态失败，order：{}", JSON.toJSONString(order.getOrderSn()));
+
+            // 校验支付金额
+            String totalAmount = request.getParameter("money");
+            if (StringUtils.isNotBlank(totalAmount) && order.getActualPrice().compareTo(new BigDecimal(totalAmount)) != 0) {
+                log.error("易支付回调：金额不符，orderSn：{} 订单金额 {} 通知金额 {}", orderSn, order.getActualPrice(), totalAmount);
                 return "error";
+            }
+
+            // 使用 CAS 原子更新，避免并发回调重复标记已支付
+            boolean updated = orderService.lambdaUpdate()
+                    .set(Order::getPayId, tradeNo)
+                    .set(Order::getPayTime, LocalDateTime.now())
+                    .set(Order::getOrderStatus, OrderStatusEnum.STATUS_PAY.getStatus())
+                    .set(Order::getUpdateTime, new Date())
+                    .eq(Order::getOrderSn, orderSn)
+                    .eq(Order::getOrderStatus, OrderStatusEnum.STATUS_CREATE.getStatus())
+                    .update();
+            if (!updated) {
+                log.info("易支付回调：CAS更新失败，订单状态已变更，orderSn：{}", orderSn);
+                return "success";
             }
             updateVirtualSales(order.getId());
         } catch (Exception e) {

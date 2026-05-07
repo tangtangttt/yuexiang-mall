@@ -80,7 +80,7 @@ public class OrderExportDTO implements Serializable {
      * 付款时间
      */
     @ExcelProperty("付款时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime payTime;
 
     /**
@@ -99,7 +99,7 @@ public class OrderExportDTO implements Serializable {
      * 发货开始时间
      */
     @ExcelProperty("发货开始时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime shipTime;
 
     /**
@@ -124,14 +124,14 @@ public class OrderExportDTO implements Serializable {
      * 退款时间
      */
     @ExcelProperty("退款时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime refundTime;
 
     /**
      * 用户确认收货时间
      */
     @ExcelProperty("用户确认收货时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime confirmTime;
 
     /**

@@ -83,16 +83,6 @@ public class IdUtil {
             this.machineId = machineId;
         }
 
-        public static void main(String[] args) {
-            SnowFlake snowFlake = new SnowFlake(getDataCenterId(), getMachineId());
-            long start = System.currentTimeMillis();
-            for (int i = 0; i < 5000000; i++) {
-                System.out.println(snowFlake.nextId());
-            }
-
-            System.out.println(System.currentTimeMillis() - start);
-        }
-
         private static long getMachineId() {
             try {
                 String hostAddress = Inet4Address.getLocalHost().getHostAddress();

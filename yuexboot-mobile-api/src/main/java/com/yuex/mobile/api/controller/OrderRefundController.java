@@ -3,6 +3,7 @@ package com.yuex.mobile.api.controller;
 
 import com.yuex.common.base.controller.BaseController;
 import com.yuex.common.core.service.shop.IMobileOrderService;
+import com.yuex.mobile.framework.security.util.MobileSecurityUtils;
 import com.yuex.util.util.R;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,8 @@ public class OrderRefundController extends BaseController {
      */
     @PostMapping("{orderId}")
     public R<Boolean> refund(@PathVariable Long orderId) {
-        mobileOrderService.refund(orderId);
+        Long userId = MobileSecurityUtils.getUserId();
+        mobileOrderService.refund(orderId, userId);
         return R.success();
     }
 

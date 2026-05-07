@@ -3,7 +3,7 @@ server:
   shutdown: graceful # 优雅关机
 spring:
   application:
-    name: waynboot-message-consumer
+    name: yuexboot-message-consumer
   data:
     redis:
       host: 127.0.0.1
@@ -45,7 +45,7 @@ spring:
 # 日志配置
 logging:
   level:
-    com.wayn: info
+    com.yuex: info
     org.springframework: info
   file:
     name: ${LOG_PATH_PREFIX:E:/home}/${spring.application.name}/info.log

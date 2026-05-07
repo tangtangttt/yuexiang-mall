@@ -69,7 +69,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean insertRoleAndMenu(Role role) {
         save(role);
@@ -77,7 +77,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         return roleMenus.isEmpty() || iRoleMenuService.saveBatch(roleMenus);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateRoleAndMenu(Role role) {
         updateById(role);

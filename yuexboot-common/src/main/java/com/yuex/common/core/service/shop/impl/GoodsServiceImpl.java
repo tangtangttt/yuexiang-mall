@@ -175,6 +175,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         return true;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateGoodsRelated(GoodsSaveRelatedReqVO goodsSaveRelatedReqVO) {
         GoodsVO goodsVO = goodsSaveRelatedReqVO.getGoods();

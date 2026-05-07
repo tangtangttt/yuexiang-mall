@@ -6,6 +6,7 @@ import com.yuex.util.util.http.HttpUtil;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -16,6 +17,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 public class ServletUtils {
 
     private static final ServletUtils getInstance;
@@ -104,7 +106,7 @@ public class ServletUtils {
             response.setCharacterEncoding(Constants.UTF_ENCODING);
             response.getWriter().print(string);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("渲染字符串到客户端失败", e);
         }
         return null;
     }

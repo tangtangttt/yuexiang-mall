@@ -97,7 +97,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
                     throw new BusinessException(ReturnCodeEnum.GOODS_STOCK_NOT_ENOUGH_ERROR);
                 }
                 existsCart.setNumber(num);
-                cart.setUpdateTime(LocalDateTime.now());
+                existsCart.setUpdateTime(LocalDateTime.now());
                 updateById(existsCart);
             }
         } finally {

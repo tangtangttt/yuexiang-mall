@@ -36,4 +36,9 @@ public class OrderRefundReqVO {
      * 平台订单id
      */
     private String payId;
+
+    /**
+     * 订单原始支付总金额（用于微信退款 total 字段）
+     */
+    private BigDecimal totalMoney;
 }

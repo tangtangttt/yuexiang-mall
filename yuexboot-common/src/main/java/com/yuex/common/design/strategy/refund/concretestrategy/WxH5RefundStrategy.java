@@ -42,7 +42,7 @@ public class WxH5RefundStrategy implements RefundInterface {
         WxPayRefundV3Request.Amount amount = new WxPayRefundV3Request.Amount();
         amount.setRefund(reqVo.getRefundMoney().multiply(new BigDecimal("100")).intValue());
         amount.setCurrency("CNY");
-        amount.setTotal(reqVo.getRefundMoney().multiply(new BigDecimal("100")).intValue());
+        amount.setTotal(reqVo.getTotalMoney().multiply(new BigDecimal("100")).intValue());
         refundV3Request.setAmount(amount);
         WxPayRefundV3Result refundV3Result;
         try {

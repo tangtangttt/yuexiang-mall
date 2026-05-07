@@ -29,11 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private PermissionService permissionService;
 
-    public static void main(String[] args) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        System.out.println(bCryptPasswordEncoder.encode("123456"));
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 1. 读取数据库中当前用户信息

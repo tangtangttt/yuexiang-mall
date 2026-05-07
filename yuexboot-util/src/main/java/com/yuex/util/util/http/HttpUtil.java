@@ -156,7 +156,7 @@ public class HttpUtil {
         try {
             retStr.append(URLEncoder.encode(retUrl, Constants.UTF_ENCODING));
         } catch (UnsupportedEncodingException e) {
-            log.error("encodeRetURL error." + url);
+            log.error("encodeRetURL error. url:{}", url);
         }
 
         if (data != null) {
@@ -185,7 +185,7 @@ public class HttpUtil {
         try {
             retUrl = URLDecoder.decode(url, Constants.UTF_ENCODING);
         } catch (UnsupportedEncodingException e) {
-            log.error("encodeRetURL error." + url);
+            log.error("encodeRetURL error. url:{}", url);
         }
 
         return retUrl;
@@ -227,7 +227,7 @@ public class HttpUtil {
         try {
             response.sendRedirect(location);
         } catch (IOException e) {
-            log.error("sendRedirect location:" + location);
+            log.error("sendRedirect location:{}", location);
         }
     }
 

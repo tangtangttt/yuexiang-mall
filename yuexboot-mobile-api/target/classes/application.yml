@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: waynboot-mobile-api
+    name: yuexboot-mobile-api
   profiles:
     active: dev
   thymeleaf:
@@ -30,8 +30,8 @@ spring:
 token:
   # 令牌自定义标识
   header: Authorization
-  # 令牌秘钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌秘钥（生产环境请务必替换为高强度随机字符串，建议使用 32 位以上字母数字混合）
+  secret: yuexboot-mall-jwt-secret-key-2024
   # 登录会话 & JWT 有效期（单位：分钟，与 Redis 中 login token TTL 一致）
   expireTime: 30
 
@@ -48,7 +48,7 @@ mybatis-plus:
       logic-delete-value: 1 # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   # 搜索指定包别名
-  typeAliasesPackage: com.wayn.**.domain
+  typeAliasesPackage: com.yuex.**.domain
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mapper/**/*Mapper.xml
 
@@ -57,9 +57,9 @@ mybatis-xml-reload:
   enabled: ${XML_RELOAD:false}
   mapper-locations: classpath*:mapper/**/*Mapper.xml
 
-# wayn配置
-wayn:
-  name: wayn
+# yuex配置
+yuex:
+  name: yuex
   version: 1.3.0
   email: 166738430@qq.com
   uploadDir: ${UPLOAD_DIR:E:/Download/pic/webp}

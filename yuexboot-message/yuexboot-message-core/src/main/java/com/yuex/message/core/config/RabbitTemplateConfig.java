@@ -22,11 +22,9 @@ public class RabbitTemplateConfig {
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> log.info("消息发送成功:correlationData({}),ack({}),cause({})", correlationData, ack, cause));
         // 消息投递到队列时，如果失败的话会进行 returnCallback 的回调处理，反之成功就不会回调。
         rabbitTemplate.setReturnsCallback(returned -> {
-            log.info("returnCallback:     " + "消息：" + returned.getMessage());
-            log.info("returnCallback:     " + "回应码：" + returned.getReplyCode());
-            log.info("returnCallback:     " + "回应信息：" + returned.getReplyText());
-            log.info("returnCallback:     " + "交换机：" + returned.getExchange());
-            log.info("returnCallback:     " + "路由键：" + returned.getRoutingKey());
+            log.info("returnCallback: 消息:{}, 回应码:{}, 回应信息:{}, 交换机:{}, 路由键:{}",
+                    returned.getMessage(), returned.getReplyCode(), returned.getReplyText(),
+                    returned.getExchange(), returned.getRoutingKey());
         });
 
         return rabbitTemplate;
@@ -39,11 +37,9 @@ public class RabbitTemplateConfig {
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> log.info("延时消息发送成功:correlationData({}),ack({}),cause({})", correlationData, ack, cause));
         // 消息投递到队列失败回调处理
         rabbitTemplate.setReturnsCallback(returned -> {
-            log.info("returnCallback:     " + "消息：" + returned.getMessage());
-            log.info("returnCallback:     " + "回应码：" + returned.getReplyCode());
-            log.info("returnCallback:     " + "回应信息：" + returned.getReplyText());
-            log.info("returnCallback:     " + "交换机：" + returned.getExchange());
-            log.info("returnCallback:     " + "路由键：" + returned.getRoutingKey());
+            log.info("returnCallback: 消息:{}, 回应码:{}, 回应信息:{}, 交换机:{}, 路由键:{}",
+                    returned.getMessage(), returned.getReplyCode(), returned.getReplyText(),
+                    returned.getExchange(), returned.getRoutingKey());
         });
         return rabbitTemplate;
     }

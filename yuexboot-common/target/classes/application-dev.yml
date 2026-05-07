@@ -59,7 +59,7 @@ sms:
 es:
   config:
     host: 127.0.0.1
-    port: 9200
+    port: 9201
     username: 
     password: 
     scheme: http
@@ -88,7 +88,7 @@ shop:
     gateway: https://openapi-sandbox.dl.alipaydev.com/gateway.do
     charset: UTF-8
     format: json
-    log_path: /opt/waynboot-mall/log
+    log_path: /opt/yuexboot-mall/log
     signtype: RSA2
     notify-url: https://68755a89.r10.cpolar.top/pay/aliPayNotify
   # 易支付

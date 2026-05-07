@@ -64,10 +64,6 @@ public class SecurityUtils {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(encryptPassword("123456"));
-    }
-
     /**
      * 判断密码是否相同
      *
