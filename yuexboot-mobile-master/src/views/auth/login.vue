@@ -71,7 +71,7 @@ export default {
       checked: false,
       isKeyboardOpen: false,
       redirect: '',
-      interval: null  // 添加定时器变量
+      interval: null // 添加定时器变量
     }
   },
   computed: {
@@ -233,7 +233,6 @@ export default {
         setTimeout(() => {
           this.$router.push(this.redirect)
         }, 500)
-
       } catch (e) {
         debugLog('登录失败:', e)
         debugLog('错误详情:', {

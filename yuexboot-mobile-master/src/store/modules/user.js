@@ -73,7 +73,6 @@ const actions = {
       commit('SET_USER_INFO', userInfo)
       return userInfo
     } catch (error) {
-
       throw error
     }
   },

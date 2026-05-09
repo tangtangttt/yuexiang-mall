@@ -7,6 +7,17 @@ import { Toast } from 'vant'
 Vue.use(VueRouter)
 
 const routes = [
+  // AI 智能客服（须放在通配符 * 之前）
+  {
+    path: '/customer/service',
+    name: 'CustomerService',
+    component: () => import('@/views/customerService'),
+    meta: {
+      title: 'AI 智能客服',
+      requiresAuth: true,
+      showTab: false
+    }
+  },
   // 首页（通配符路由，放在最后）
   {
     path: '*',
@@ -25,7 +36,7 @@ const routes = [
     component: () => import('@/views/auth/login'),
     meta: {
       title: '登录',
-      noAuth: true  // 标记不需要登录
+      noAuth: true // 标记不需要登录
     }
   },
   // 注册
@@ -35,7 +46,7 @@ const routes = [
     component: () => import('@/views/auth/login'),
     meta: {
       title: '注册',
-      noAuth: true  // 标记不需要登录
+      noAuth: true // 标记不需要登录
     }
   },
   // 分类
@@ -47,7 +58,7 @@ const routes = [
       title: '分类',
       showTab: true,
       keepAlive: true,
-      noAuth: true  // 分类页不需要登录
+      noAuth: true // 分类页不需要登录
     }
   },
   // 购物车
@@ -58,7 +69,7 @@ const routes = [
     meta: {
       title: '购物车',
       showTab: true,
-      requiresAuth: true  // 需要登录
+      requiresAuth: true // 需要登录
     }
   },
   // 我的
@@ -69,7 +80,7 @@ const routes = [
     meta: {
       title: '我的',
       showTab: true,
-      requiresAuth: true  // 需要登录
+      requiresAuth: true // 需要登录
     }
   },
   // 用户设置
@@ -170,7 +181,7 @@ const routes = [
     meta: {
       title: '商品列表',
       keepAlive: true,
-      noAuth: true  // 商品列表不需要登录
+      noAuth: true // 商品列表不需要登录
     }
   },
   // 金刚位跳转商品列表
@@ -194,7 +205,7 @@ const routes = [
     meta: {
       title: '商品详情',
       keepAlive: true,
-      noAuth: true  // 商品详情不需要登录，但加入购物车等操作需要
+      noAuth: true // 商品详情不需要登录，但加入购物车等操作需要
     }
   },
   // 商品评论
@@ -353,7 +364,7 @@ function requiresAuth(route) {
   return false
 }
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // 设置页面标题
   if (to.meta && to.meta.title) {
     document.title = to.meta.title
@@ -369,7 +380,7 @@ router.beforeEach(async (to, from, next) => {
       Toast.fail('请先登录')
       next({
         path: '/login',
-        query: { redirect: to.fullPath }  // 保存登录后要跳转的页面
+        query: { redirect: to.fullPath } // 保存登录后要跳转的页面
       })
       return
     }
@@ -379,9 +390,7 @@ router.beforeEach(async (to, from, next) => {
       const hasUserInfo = store.state.user.userInfo && Object.keys(store.state.user.userInfo).length > 0
 
       if (!hasUserInfo) {
-
         await store.dispatch('user/getInfo')
-
       }
       next()
     } catch (error) {

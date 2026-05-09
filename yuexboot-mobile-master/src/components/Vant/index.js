@@ -62,7 +62,9 @@ import {
   ShareSheet,
   Uploader,
   DatetimePicker,
-  Picker
+  Picker,
+  Collapse,
+  CollapseItem
 } from 'vant'
 
 Vue.use(Toast)
@@ -127,4 +129,6 @@ Vue.use(Toast)
   .use(Uploader)
   .use(DatetimePicker)
   .use(Picker)
+  .use(Collapse)
+  .use(CollapseItem)
 

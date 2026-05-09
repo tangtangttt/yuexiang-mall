@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 import router from '@/router'
 
 // ========== 调试开关：上线时改为 false 即可 ==========
-const ENABLE_DEBUG = false  // 改为 false 关闭所有调试日志
+const ENABLE_DEBUG = false // 改为 false 关闭所有调试日志
 
 // 封装调试函数
 const debugLog = (...args) => {
@@ -96,7 +96,7 @@ service.interceptors.response.use(
             }
           })
         })
-        return Promise.resolve({code: 401, data: null, msg:'未登录'})
+        return Promise.resolve({ code: 401, data: null, msg: '未登录' })
       }
 
       // 订单轮询
@@ -173,7 +173,7 @@ service.interceptors.response.use(
  * @param {*} postData
  * @returns
  */
-service.formDataPost = function (url, postData) {
+service.formDataPost = function(url, postData) {
   const options = {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },

@@ -1,5 +1,5 @@
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-data\waynboot-data-elastic\src\main\java\com\wayn\data\elastic\manager\ElasticEntity.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-data\waynboot-data-elastic\src\main\java\com\wayn\data\elastic\manager\ElasticDocument.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-data\waynboot-data-elastic\src\main\java\com\wayn\data\elastic\config\ElasticConfig.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-data\waynboot-data-elastic\src\main\java\com\wayn\data\elastic\config\ElasticClientConfig.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-data\waynboot-data-elastic\src\main\java\com\wayn\data\elastic\constant\EsConstants.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-data\yuexboot-data-elastic\src\main\java\com\yuex\data\elastic\config\ElasticClientConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-data\yuexboot-data-elastic\src\main\java\com\yuex\data\elastic\config\ElasticConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-data\yuexboot-data-elastic\src\main\java\com\yuex\data\elastic\manager\ElasticEntity.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-data\yuexboot-data-elastic\src\main\java\com\yuex\data\elastic\manager\ElasticDocument.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-data\yuexboot-data-elastic\src\main\java\com\yuex\data\elastic\constant\EsConstants.java

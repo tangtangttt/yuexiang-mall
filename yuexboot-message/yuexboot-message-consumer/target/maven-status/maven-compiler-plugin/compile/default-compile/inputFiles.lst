@@ -1,7 +1,7 @@
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-consumer\src\main\java\com\wayn\MessageApplication.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-consumer\src\main\java\com\wayn\message\consumer\api\MobileApi.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-consumer\src\main\java\com\wayn\message\consumer\OrderPayConsumer.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-consumer\src\main\java\com\wayn\message\consumer\EmailSendConsumer.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-consumer\src\main\java\com\wayn\message\consumer\OrderDelayConsumer.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-consumer\src\main\java\com\wayn\message\consumer\config\RestTemplateConfig.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-consumer\src\main\java\com\wayn\message\consumer\api\impl\MobileApiImpl.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-consumer\src\main\java\com\yuex\message\consumer\api\MobileApi.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-consumer\src\main\java\com\yuex\message\consumer\config\RestTemplateConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-consumer\src\main\java\com\yuex\message\consumer\OrderDelayConsumer.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-consumer\src\main\java\com\yuex\message\consumer\OrderPayConsumer.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-consumer\src\main\java\com\yuex\message\consumer\api\impl\MobileApiImpl.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-consumer\src\main\java\com\yuex\message\consumer\EmailSendConsumer.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-consumer\src\main\java\com\yuex\MessageApplication.java

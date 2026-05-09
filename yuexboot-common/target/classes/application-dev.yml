@@ -1,5 +1,8 @@
 # 数据源配置
 spring:
+  sql:
+    init:
+      mode: never
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     # 主库数据源

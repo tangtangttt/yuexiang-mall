@@ -5,6 +5,15 @@ server:
 spring:
   application:
     name: yuexboot-mobile-api
+  ai:
+    openai:
+      # 通义千问 OpenAI 兼容：base-url 需带 /v1；密钥建议用环境变量注入
+      api-key: sk-aavubnkgsqqmohrfhhfbkfezkhoyjzthiunybzvsbfbfyltm
+      base-url: https://api.siliconflow.cn
+      chat:
+        options:
+          model: Pro/zai-org/GLM-4.7
+          temperature: 0.6
   profiles:
     active: dev
   thymeleaf:
@@ -56,6 +65,11 @@ mybatis-plus:
 mybatis-xml-reload:
   enabled: ${XML_RELOAD:false}
   mapper-locations: classpath*:mapper/**/*Mapper.xml
+
+# AI 客服
+customer:
+  ai:
+    max-rounds: 5
 
 # yuex配置
 yuex:

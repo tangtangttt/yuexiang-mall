@@ -1,6 +1,6 @@
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-core\src\main\java\com\wayn\message\core\constant\MQConstants.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-core\src\main\java\com\wayn\message\core\config\DelayRabbitMqConfig.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-core\src\main\java\com\wayn\message\core\dto\OrderDTO.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-core\src\main\java\com\wayn\message\core\config\DeadLetterRabbitMqConfig.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-core\src\main\java\com\wayn\message\core\config\RabbitTemplateConfig.java
-E:\a_java开发\java练习\waynboot-mall-master\waynboot-message\waynboot-message-core\src\main\java\com\wayn\message\core\config\BusinessRabbitConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-core\src\main\java\com\yuex\message\core\config\DelayRabbitMqConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-core\src\main\java\com\yuex\message\core\constant\MQConstants.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-core\src\main\java\com\yuex\message\core\config\RabbitTemplateConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-core\src\main\java\com\yuex\message\core\config\BusinessRabbitConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-core\src\main\java\com\yuex\message\core\config\DeadLetterRabbitMqConfig.java
+E:\a_java开发\java练习\yuexboot-mall-master\yuexboot-message\yuexboot-message-core\src\main\java\com\yuex\message\core\dto\OrderDTO.java

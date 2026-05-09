@@ -53,6 +53,8 @@ public class SecurityConfig {
                         .requestMatchers("/*/api-docs", "/druid/**").permitAll()
                         // 支付回调：支付宝/微信服务器 POST，无登录态；须与 PayNotifyController 的 /pay/callback/** 一致
                         .requestMatchers("/callback/**", "/pay/callback/**").permitAll()
+                        // AI 智能客服：流式响应需要放行，避免子线程权限拦截
+                        .requestMatchers("/customer/chat/**", "/customer/stop", "/customer/history").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(configurer -> configurer.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler))

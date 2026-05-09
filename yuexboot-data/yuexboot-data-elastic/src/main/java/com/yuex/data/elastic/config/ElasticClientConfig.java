@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ElasticClientConfig {
-    @Bean
+    @Bean(name = "esRestClientBuilder")
     public RestClientBuilder restClientBuilder(ElasticConfig config) {
         RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort(), config.getScheme()));
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();

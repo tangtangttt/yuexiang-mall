@@ -44,10 +44,10 @@ module.exports = {
         changeOrigin: true,
         logLevel: 'debug',
         ws: true,
-        onProxyReq: function (proxyReq, req, res) {
+        onProxyReq: function(proxyReq, req, res) {
           console.log('[Proxy] 转发 /upload 请求:', req.url, '→ http://localhost:82')
         },
-        onError: function (err, req, res) {
+        onError: function(err, req, res) {
           console.error('[Proxy Error]', err.message)
           res.writeHead(500, {
             'Content-Type': 'text/plain'
@@ -74,7 +74,7 @@ module.exports = {
       // 生成文件的最大体积 整数类型（以字节为单位 300k）
       maxAssetSize: 30000000,
       // 只给出 js 文件的性能提示
-      assetFilter: function (assetFilename) {
+      assetFilter: function(assetFilename) {
         return assetFilename.endsWith('.js')
       }
     }
