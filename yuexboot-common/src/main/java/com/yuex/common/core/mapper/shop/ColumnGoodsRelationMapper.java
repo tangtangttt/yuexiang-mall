@@ -7,8 +7,7 @@ import com.yuex.common.core.entity.shop.ColumnGoodsRelation;
  * 栏目商品关联表 Mapper 接口
  *
  * @author yuex
- * @since 2020-10-10
- */
+ * @since*/
 public interface ColumnGoodsRelationMapper extends BaseMapper<ColumnGoodsRelation> {
 
     Integer getGoodsNum(Long columnId);

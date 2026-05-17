@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * @author: yuexaqua
- * @date: 2023/11/13 23:08
- */
+ * @author:yuex
+ * @date*/
 @Data
 @Builder
 public class MallConfigResponseVO implements Serializable {

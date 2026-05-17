@@ -51,7 +51,12 @@
                   </van-collapse-item>
                 </van-collapse>
               </div>
-              <div class="cs-text">{{ msg.content }}</div>
+              <!-- 使用v-html渲染Markdown内容 -->
+              <div
+                v-if="msg.content"
+                class="cs-text markdown-content"
+                v-html="renderMarkdown(msg.content)"
+              ></div>
               <div v-if="msg.recommend && msg.recommend.length" class="cs-rec">
                 <div class="cs-rec__label">猜你想问</div>
                 <div class="cs-rec__tags">
@@ -129,6 +134,9 @@
 <script>
 import NavBar from '@/components/NavBar'
 import { buildChatStreamUrl, getCustomerAuthHeader, stopCustomerStream } from '@/api/customerService'
+// 导入markdown解析库
+import DOMPurify from 'dompurify'
+import { marked } from 'marked'
 
 const SESSION_KEY = 'mall_customer_ai_session_id'
 
@@ -166,6 +174,12 @@ export default {
     } catch (e) {
       this.sessionId = ''
     }
+
+    // 配置marked选项
+    marked.setOptions({
+      breaks: true, // 启用换行符转换为<br>
+      gfm: true,    // 启用GitHub风格的Markdown
+    })
   },
   beforeDestroy() {
     this.abortStream()
@@ -338,6 +352,13 @@ export default {
         msg.content = data.content || '服务异常'
         this.$toast.fail(msg.content)
       }
+    },
+    // 渲染Markdown内容的方法
+    renderMarkdown(content) {
+      if (!content) return ''
+      // 使用marked解析Markdown，然后用DOMPurify净化HTML以防止XSS攻击
+      const rawHtml = marked.parse(content)
+      return DOMPurify.sanitize(rawHtml)
     },
     scrollToBottom() {
       const el = this.$refs.scrollWrap
@@ -527,6 +548,86 @@ export default {
 
 .cs-text {
   white-space: pre-wrap;
+}
+
+/* Markdown内容样式 */
+.markdown-content {
+  ::v-deep h1, ::v-deep h2, ::v-deep h3, ::v-deep h4, ::v-deep h5, ::v-deep h6 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  ::v-deep h1 { font-size: 1.5em; }
+  ::v-deep h2 { font-size: 1.3em; }
+  ::v-deep h3 { font-size: 1.1em; }
+
+  ::v-deep p {
+    margin: 8px 0;
+  }
+
+  ::v-deep ul, ::v-deep ol {
+    margin: 8px 0;
+    padding-left: 20px;
+  }
+
+  ::v-deep li {
+    margin: 4px 0;
+  }
+
+  ::v-deep code {
+    background-color: #f1f3f5;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  ::v-deep pre {
+    background-color: #f1f3f5;
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 8px 0;
+  }
+
+  ::v-deep pre code {
+    background: none;
+    padding: 0;
+  }
+
+  ::v-deep blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 12px;
+    margin: 8px 0;
+    color: #666;
+  }
+
+  ::v-deep table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  ::v-deep th, ::v-deep td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  ::v-deep th {
+    background-color: #f2f2f2;
+  }
+
+  ::v-deep a {
+    color: #1e6bb8;
+    text-decoration: underline;
+  }
+
+  ::v-deep img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 .cs-thinking {

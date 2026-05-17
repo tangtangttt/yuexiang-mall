@@ -14,8 +14,7 @@ import java.util.List;
  * 类目表 服务类
  *
  * @author yuex
- * @since 2020-06-26
- */
+ * @since*/
 public interface ICategoryService extends IService<Category> {
     /**
      * 查询分类列表

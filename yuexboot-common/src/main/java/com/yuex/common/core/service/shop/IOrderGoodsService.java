@@ -7,8 +7,7 @@ import com.yuex.common.core.entity.shop.OrderGoods;
  * 订单商品表 服务类
  *
  * @author yuex
- * @since 2020-08-11
- */
+ * @since*/
 public interface IOrderGoodsService extends IService<OrderGoods> {
 
 }

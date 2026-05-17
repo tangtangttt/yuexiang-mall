@@ -10,9 +10,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * @author: yuexaqua
- * @date: 2024/5/6 15:10
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class OrderListDataResVO implements Serializable {
     @Serial

@@ -9,8 +9,7 @@ import java.util.List;
  * 类目表 Mapper 接口
  *
  * @author yuex
- * @since 2020-06-26
- */
+ * @since*/
 public interface CategoryMapper extends BaseMapper<Category> {
 
     List<Category> selectCategoryList(Category category);

@@ -15,8 +15,7 @@ import java.util.Map;
  * 商品基本信息表 服务类
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 public interface IGoodsService extends IService<Goods> {
 
 

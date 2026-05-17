@@ -10,9 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/29 16:51
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class OrderDetailResVO implements Serializable {
 

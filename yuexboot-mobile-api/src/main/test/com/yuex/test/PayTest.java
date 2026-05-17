@@ -12,9 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/30 16:18
- */
+ * @author:yuex
+ * @date*/
 @Slf4j
 @SpringBootTest
 @RunWith(SpringRunner.class)

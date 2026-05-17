@@ -6,9 +6,8 @@ import org.springframework.retry.annotation.Retryable;
 /**
  * mobile服务调用api
  *
- * @author: yuexaqua
- * @date: 2023/8/20 18:30
- */
+ * @author:yuex
+ * @date*/
 public interface MobileApi {
     void submitOrder(String body) throws Exception;
 

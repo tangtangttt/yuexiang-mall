@@ -23,8 +23,7 @@ import java.util.List;
  * 后台字典管理
  *
  * @author yuex
- * @since 2020-07-21
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("system/dict/type")

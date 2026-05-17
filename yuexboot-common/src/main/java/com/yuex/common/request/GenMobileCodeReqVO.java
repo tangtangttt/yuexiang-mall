@@ -7,9 +7,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author: yuexaqua
- * @date: 2024/5/3 14:12
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class GenMobileCodeReqVO implements Serializable {
     @Serial

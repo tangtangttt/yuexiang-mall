@@ -4,9 +4,8 @@ import com.yuex.common.config.YuexConfig;
 import com.yuex.common.response.MallConfigResponseVO;
 
 /**
- * @author: yuexaqua
- * @date: 2023/11/13 23:10
- */
+ * @author:yuex
+ * @date*/
 public class MallConfigConvert {
 
     public static MallConfigResponseVO convertMallConfig() {

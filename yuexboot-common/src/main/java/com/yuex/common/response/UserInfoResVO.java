@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/27 15:38
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class UserInfoResVO implements Serializable {
     @Serial

@@ -5,9 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/30 14:46
- */
+ * @author:yuex
+ * @date*/
 @Data
 @Component
 @ConfigurationProperties(prefix = "shop.epay")

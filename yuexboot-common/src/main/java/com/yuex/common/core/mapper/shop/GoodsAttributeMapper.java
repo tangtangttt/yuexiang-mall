@@ -7,8 +7,7 @@ import com.yuex.common.core.entity.shop.GoodsAttribute;
  * 商品参数表 Mapper 接口
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 public interface GoodsAttributeMapper extends BaseMapper<GoodsAttribute> {
 
 }

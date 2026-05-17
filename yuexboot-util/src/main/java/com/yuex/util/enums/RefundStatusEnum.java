@@ -5,9 +5,8 @@ import lombok.Getter;
 import java.util.Objects;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/30 10:26
- */
+ * @author:yuex
+ * @date*/
 @Getter
 public enum RefundStatusEnum {
     // 退款状态 0未退款 1申请退款 2退款成功 3退款失败

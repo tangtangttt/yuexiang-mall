@@ -11,8 +11,7 @@ import com.yuex.common.core.vo.CommentVO;
  * 评论表 服务类
  *
  * @author yuex
- * @since 2020-10-03
- */
+ * @since*/
 public interface ICommentService extends IService<Comment> {
 
     /**

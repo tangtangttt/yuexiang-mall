@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
  * 搜索历史表
  *
  * @author yuex
- * @since 2020-09-23
- */
+ * @since*/
 @Data
 @TableName("shop_search_history")
 @EqualsAndHashCode(callSuper = false)

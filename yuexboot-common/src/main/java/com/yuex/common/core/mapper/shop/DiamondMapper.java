@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.shop.Diamond;
  * 首页金刚区配置 Mapper 接口
  *
  * @author yuex
- * @since 2020-10-10
- */
+ * @since*/
 public interface DiamondMapper extends BaseMapper<Diamond> {
 
     IPage<Diamond> selectDiamondListPage(Page<Diamond> page, Diamond diamond);

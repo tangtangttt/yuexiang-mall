@@ -7,9 +7,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/27 16:36
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class HotKeywordsResVO implements Serializable {
     @Serial

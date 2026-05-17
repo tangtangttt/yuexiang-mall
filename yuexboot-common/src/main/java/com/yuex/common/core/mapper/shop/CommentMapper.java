@@ -11,8 +11,7 @@ import com.yuex.common.core.vo.CommentVO;
  * 评论表 Mapper 接口
  *
  * @author yuex
- * @since 2020-10-03
- */
+ * @since*/
 public interface CommentMapper extends BaseMapper<Comment> {
 
     IPage<Comment> selectListPage(Page<Comment> page, Comment comment);

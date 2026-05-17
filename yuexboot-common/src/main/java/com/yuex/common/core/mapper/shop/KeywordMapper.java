@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.shop.Keyword;
  * 关键字表 Mapper 接口
  *
  * @author yuex
- * @since 2020-11-02
- */
+ * @since*/
 public interface KeywordMapper extends BaseMapper<Keyword> {
 
     IPage<Keyword> selectKeywordListPage(Page<Keyword> page, Keyword keyword);

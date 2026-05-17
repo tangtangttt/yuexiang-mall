@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/30 16:05
- */
+ * @author:yuex
+ * @date*/
 public class EpaySignUtil {
 
     public static String sign(Map<String, Object> map, String key) {

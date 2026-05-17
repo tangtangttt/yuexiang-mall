@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * 邮件配置
  *
  * @author yuex
- * @since 2020-07-21
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("tool/email")

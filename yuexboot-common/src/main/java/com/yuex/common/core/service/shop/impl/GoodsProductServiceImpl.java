@@ -18,8 +18,7 @@ import java.util.List;
  * 商品货品表 服务实现类
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 @Slf4j
 @Service
 @AllArgsConstructor

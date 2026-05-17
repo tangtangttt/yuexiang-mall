@@ -35,8 +35,7 @@ import java.util.stream.Collectors;
  * 购物车商品表 服务实现类
  *
  * @author yuex
- * @since 2020-08-03
- */
+ * @since*/
 @Service
 @AllArgsConstructor
 public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements ICartService {

@@ -3,9 +3,8 @@ package com.yuex.common.wapper.epay.response;
 import lombok.Data;
 
 /**
- * @author: yuexaqua
- * @date: 2024/5/1 14:06
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class EpayResponse {
 

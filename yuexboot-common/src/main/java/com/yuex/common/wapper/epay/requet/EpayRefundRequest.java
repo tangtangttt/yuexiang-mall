@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/30 16:02
- */
+ * @author:yuex
+ * @date*/
 @Data
 @AllArgsConstructor
 public class EpayRefundRequest {

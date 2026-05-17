@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.shop.Member;
  * 用户表 服务类
  *
  * @author yuex
- * @since 2020-07-21
- */
+ * @since*/
 public interface IMemberService extends IService<Member> {
 
     /**

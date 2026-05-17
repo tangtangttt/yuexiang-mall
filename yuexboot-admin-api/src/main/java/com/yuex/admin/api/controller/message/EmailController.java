@@ -15,8 +15,7 @@ import java.util.Collections;
 /**
  * 邮件处理器
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("callback/email")

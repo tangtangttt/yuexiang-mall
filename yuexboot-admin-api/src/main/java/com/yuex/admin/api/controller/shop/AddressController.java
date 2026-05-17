@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 用户收获地址管理
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("shop/address")

@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.tool.QiniuContent;
  * 七牛云文件存储 Mapper 接口
  *
  * @author yuex
- * @since 2020-11-15
- */
+ * @since*/
 public interface QiniuContentMapper extends BaseMapper<QiniuContent> {
 
     IPage<QiniuContent> selectQiniuContentListPage(Page<QiniuContent> page, QiniuContent qiniuContent);

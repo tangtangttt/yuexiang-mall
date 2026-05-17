@@ -6,9 +6,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author: yuexaqua
- * @date: 2023/8/6 23:40
- */
+ * @author:yuex
+ * @date*/
 @Slf4j
 public class ThreadUtil {
 

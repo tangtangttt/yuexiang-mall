@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
  * 首页金刚区配置 服务实现类
  *
  * @author yuex
- * @since 2020-10-10
- */
+ * @since*/
 @Service
 @AllArgsConstructor
 public class DiamondServiceImpl extends ServiceImpl<DiamondMapper, Diamond> implements IDiamondService {

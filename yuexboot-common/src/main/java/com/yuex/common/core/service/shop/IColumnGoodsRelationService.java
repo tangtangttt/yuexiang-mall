@@ -7,8 +7,7 @@ import com.yuex.common.core.entity.shop.ColumnGoodsRelation;
  * 栏目商品关联表 服务类
  *
  * @author yuex
- * @since 2020-10-10
- */
+ * @since*/
 public interface IColumnGoodsRelationService extends IService<ColumnGoodsRelation> {
 
     /**

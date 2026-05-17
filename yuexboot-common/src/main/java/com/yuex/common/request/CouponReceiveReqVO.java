@@ -7,9 +7,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author: yuexaqua
- * @date: 2024/6/13 15:51
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class CouponReceiveReqVO implements Serializable {
 

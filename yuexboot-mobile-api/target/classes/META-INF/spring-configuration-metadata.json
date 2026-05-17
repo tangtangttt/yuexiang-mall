@@ -4,7 +4,7 @@
       "name": "spring.datasource.master",
       "type": "javax.sql.DataSource",
       "sourceType": "com.yuex.mobile.framework.config.HikariCpConfig",
-      "sourceMethod": "masterDataSource()"
+      "sourceMethod": "public javax.sql.DataSource masterDataSource() "
     }
   ],
   "properties": [],

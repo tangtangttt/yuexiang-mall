@@ -50,8 +50,7 @@ import java.util.stream.Collectors;
  * 搜索接口
  *
  * @author yuex
- * @since 2020-09-23
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("search")

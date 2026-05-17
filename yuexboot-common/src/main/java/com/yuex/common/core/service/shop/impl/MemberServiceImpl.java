@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
  * 用户表 服务实现类
  *
  * @author yuex
- * @since 2020-07-21
- */
+ * @since*/
 @Service
 @AllArgsConstructor
 public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements IMemberService {

@@ -16,8 +16,7 @@ import java.util.List;
  * 搜索历史接口
  *
  * @author yuex
- * @since 2020-09-23
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("searchHistory")

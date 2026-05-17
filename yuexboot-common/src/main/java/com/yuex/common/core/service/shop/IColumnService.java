@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.shop.Column;
  * 首页栏目配置 服务类
  *
  * @author yuex
- * @since 2020-10-10
- */
+ * @since*/
 public interface IColumnService extends IService<Column> {
 
     /**

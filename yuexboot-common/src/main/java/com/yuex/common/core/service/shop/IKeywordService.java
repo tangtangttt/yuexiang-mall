@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.shop.Keyword;
  * 关键字表 服务类
  *
  * @author yuex
- * @since 2020-11-02
- */
+ * @since*/
 public interface IKeywordService extends IService<Keyword> {
 
     /**

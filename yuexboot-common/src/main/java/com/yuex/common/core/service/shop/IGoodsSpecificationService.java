@@ -10,8 +10,7 @@ import java.util.List;
  * 商品规格表 服务类
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 public interface IGoodsSpecificationService extends IService<GoodsSpecification> {
 
     List<SpecificationVO> getSpecificationVOList(Long goodsId);

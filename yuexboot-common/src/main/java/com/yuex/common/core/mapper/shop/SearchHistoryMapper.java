@@ -10,8 +10,7 @@ import java.util.List;
  * 搜索历史表 Mapper 接口
  *
  * @author yuex
- * @since 2020-09-23
- */
+ * @since*/
 public interface SearchHistoryMapper extends BaseMapper<SearchHistory> {
 
     List<SearchHistory> selectSeachHistoryList(Long memberId);

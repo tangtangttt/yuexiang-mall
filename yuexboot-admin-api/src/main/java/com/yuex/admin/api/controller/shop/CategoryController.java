@@ -17,8 +17,7 @@ import java.util.List;
  * 商城分类管理
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("/shop/category")

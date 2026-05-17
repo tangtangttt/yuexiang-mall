@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
  * 栏目商品关联表 服务实现类
  *
  * @author yuex
- * @since 2020-10-10
- */
+ * @since*/
 @Service
 @AllArgsConstructor
 public class ColumnGoodsRelationServiceImpl extends ServiceImpl<ColumnGoodsRelationMapper, ColumnGoodsRelation> implements IColumnGoodsRelationService {

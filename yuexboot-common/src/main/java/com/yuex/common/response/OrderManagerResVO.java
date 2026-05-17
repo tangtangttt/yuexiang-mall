@@ -9,9 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/28 17:22
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class OrderManagerResVO implements Serializable {
     @Serial

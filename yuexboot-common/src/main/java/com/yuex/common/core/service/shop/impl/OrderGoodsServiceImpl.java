@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
  * 订单商品表 服务实现类
  *
  * @author yuex
- * @since 2020-08-11
- */
+ * @since*/
 @Service
 public class OrderGoodsServiceImpl extends ServiceImpl<OrderGoodsMapper, OrderGoods> implements IOrderGoodsService {
 

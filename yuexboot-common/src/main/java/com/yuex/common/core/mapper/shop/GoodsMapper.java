@@ -11,8 +11,7 @@ import java.util.List;
  * 商品基本信息表 Mapper 接口
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 public interface GoodsMapper extends BaseMapper<Goods> {
 
     IPage<Goods> selectGoodsListPage(Page<Goods> page, Goods goods);

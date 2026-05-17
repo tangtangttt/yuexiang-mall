@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author: yuexaqua
- * @date: 2023/11/13 23:32
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class RecommonGoodsResponseVO implements Serializable {
     @Serial

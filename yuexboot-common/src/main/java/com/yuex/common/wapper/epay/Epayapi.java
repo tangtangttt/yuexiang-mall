@@ -18,9 +18,8 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/30 14:50
- */
+ * @author:yuex
+ * @date*/
 @Slf4j
 @Component
 public class Epayapi {

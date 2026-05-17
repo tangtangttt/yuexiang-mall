@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.shop.Column;
  * 首页栏目配置 Mapper 接口
  *
  * @author yuex
- * @since 2020-10-10
- */
+ * @since*/
 public interface ColumnMapper extends BaseMapper<Column> {
 
     IPage<Column> selectColumnListPage(Page<Column> page, Column column);

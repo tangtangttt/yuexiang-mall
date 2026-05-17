@@ -15,9 +15,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @author: yuexaqua
- * @date: 2023/8/20 18:30
- */
+ * @author:yuex
+ * @date*/
 @Slf4j
 @Service
 public class MobileApiImpl implements MobileApi {

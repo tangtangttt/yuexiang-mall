@@ -3,9 +3,8 @@ package com.yuex.data.redis.constant;
 import lombok.Getter;
 
 /**
- * @author: yuexaqua
- * @date: 2023/8/10 22:28
- */
+ * @author:yuex
+ * @date*/
 @Getter
 public enum RedisKeyEnum {
 

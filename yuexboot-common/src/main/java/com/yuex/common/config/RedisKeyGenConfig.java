@@ -6,9 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
- * @author: yuexaqua
- * @date: 2023/11/6 23:53
- */
+ * @author:yuex
+ * @date*/
 @Component
 public class RedisKeyGenConfig {
 

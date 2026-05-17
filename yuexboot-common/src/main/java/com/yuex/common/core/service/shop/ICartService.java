@@ -11,8 +11,7 @@ import java.util.List;
  * 购物车商品表 服务类
  *
  * @author yuex
- * @since 2020-08-03
- */
+ * @since*/
 public interface ICartService extends IService<Cart> {
 
     /**

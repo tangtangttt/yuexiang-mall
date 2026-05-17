@@ -10,8 +10,7 @@ import com.yuex.common.response.OrderManagerResVO;
  * 类目表 Mapper 接口
  *
  * @author yuex
- * @since 2020-06-26
- */
+ * @since*/
 public interface AdminOrderMapper extends BaseMapper<Order> {
 
     IPage<OrderManagerResVO> selectOrderListPage(IPage<Order> page, OrderManagerReqVO order);

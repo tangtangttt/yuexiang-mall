@@ -6,9 +6,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/27 15:34
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class CaptchaResVO implements Serializable {
     @Serial

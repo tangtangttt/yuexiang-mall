@@ -13,8 +13,7 @@ import java.util.List;
  * 搜索历史表 服务实现类
  *
  * @author yuex
- * @since 2020-09-23
- */
+ * @since*/
 @Service
 @AllArgsConstructor
 public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, SearchHistory> implements ISearchHistoryService {

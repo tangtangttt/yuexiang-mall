@@ -7,8 +7,7 @@ import com.yuex.common.core.entity.shop.OrderGoods;
  * 订单商品表 Mapper 接口
  *
  * @author yuex
- * @since 2020-08-11
- */
+ * @since*/
 public interface OrderGoodsMapper extends BaseMapper<OrderGoods> {
 
 }

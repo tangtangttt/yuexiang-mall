@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/27 15:41
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class RoleMenuTreeselectResVO implements Serializable {
     @Serial

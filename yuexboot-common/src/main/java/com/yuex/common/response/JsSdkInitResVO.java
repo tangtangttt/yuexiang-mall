@@ -3,9 +3,8 @@ package com.yuex.common.response;
 import lombok.Data;
 
 /**
- * @author: yuexaqua
- * @date: 2024/6/28 18:16
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class JsSdkInitResVO {
 

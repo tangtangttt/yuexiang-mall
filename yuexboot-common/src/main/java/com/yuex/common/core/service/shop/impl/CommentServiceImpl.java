@@ -23,8 +23,7 @@ import java.util.Date;
  * 评论表 服务实现类
  *
  * @author yuex
- * @since 2020-10-03
- */
+ * @since*/
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements ICommentService {

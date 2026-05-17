@@ -18,8 +18,7 @@ import java.util.List;
  * banner图片管理
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("shop/banner")

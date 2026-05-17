@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 金刚区接口
  *
  * @author yuex
- * @since 2024/1/15
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("diamond")

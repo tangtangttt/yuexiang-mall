@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
  * 购物车商品表
  *
  * @author yuex
- * @since 2020-08-03
- */
+ * @since*/
 @Data
 @TableName(value = "shop_cart", autoResultMap = true)
 @EqualsAndHashCode(callSuper = false)

@@ -43,8 +43,7 @@ import static com.yuex.util.enums.ReturnCodeEnum.*;
  * 登录相关接口
  *
  * @author yuex
- * @since 2024/1/15
- */
+ * @since*/
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -159,6 +158,11 @@ public class LoginController {
         if (ttl > 0) {
             throw new BusinessException(YZM_ENTER_BUSY_ERROR);
         }
+        
+        // 先设置发送限制标记，防止并发请求和短信服务异常时的重复发送
+        String sendKey = MOBILE_CODE_SEND_CACHE.getKey(mobile);
+        stringRedisCache.setCacheObject(sendKey, "1", MOBILE_CODE_SEND_CACHE.getExpireSecond());
+        
         String code = "1234";
         if (profileUtil.isProd()) {
             SmsBlend smsBlend = SmsFactory.createSmsBlend(SupplierType.ALIBABA);
@@ -166,14 +170,13 @@ public class LoginController {
             SmsResponse smsResponse = smsBlend.sendMessage(mobile, code);
             log.info("smsResponse is {}", smsResponse);
             if (!smsResponse.isSuccess()) {
-                stringRedisCache.setCacheObject(MOBILE_CODE_SEND_CACHE.getKey(mobile), "1", MOBILE_CODE_SEND_CACHE.getExpireSecond());
+                // 短信发送失败，删除限制标记，允许立即重试
+                stringRedisCache.deleteObject(sendKey);
                 throw new BusinessException(MOBILE_YZM_SEND_ERROR.getCode(), smsResponse.getMessage());
             }
         }
         log.info("手机号：{}，发送短信：{}", mobile, code);
-        String sendKey = MOBILE_CODE_SEND_CACHE.getKey(mobile);
         String codeKey = MOBILE_CODE_CACHE.getKey(mobile + "_" + code);
-        stringRedisCache.setCacheObject(sendKey, "1", MOBILE_CODE_SEND_CACHE.getExpireSecond());
         stringRedisCache.setCacheString(codeKey, code, MOBILE_CODE_CACHE.getExpireSecond().longValue());
         log.info("验证码已存储 - sendKey: {}, codeKey: {}, code: {}", sendKey, codeKey, code);
 

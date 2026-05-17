@@ -31,8 +31,7 @@ import java.util.*;
  * 商品基本信息表 服务实现类
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 @Service
 @AllArgsConstructor
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements IGoodsService {

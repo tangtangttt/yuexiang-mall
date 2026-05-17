@@ -24,8 +24,7 @@ import java.io.IOException;
  * 个人信息
  *
  * @author yuex
- * @since 2020-07-21
- */
+ * @since*/
 @RestController
 @AllArgsConstructor
 @RequestMapping("system/user/profile")

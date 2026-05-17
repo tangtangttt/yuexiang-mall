@@ -17,8 +17,7 @@ import java.util.Map;
  * 商品规格表 服务实现类
  *
  * @author yuex
- * @since 2020-07-06
- */
+ * @since*/
 @Service
 public class GoodsSpecificationServiceImpl extends ServiceImpl<GoodsSpecificationMapper, GoodsSpecification> implements IGoodsSpecificationService {
 

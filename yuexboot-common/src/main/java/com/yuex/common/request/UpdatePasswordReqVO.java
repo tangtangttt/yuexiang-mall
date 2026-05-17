@@ -7,9 +7,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author: yuexaqua
- * @date: 2024/4/27 19:46
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class UpdatePasswordReqVO implements Serializable {
     @Serial

@@ -9,8 +9,7 @@ import com.yuex.common.core.entity.shop.Cart;
  * 购物车商品表 Mapper 接口
  *
  * @author yuex
- * @since 2020-08-03
- */
+ * @since*/
 public interface CartMapper extends BaseMapper<Cart> {
 
     IPage<Cart> selectCartPageList(Page<Cart> page, Long userId);

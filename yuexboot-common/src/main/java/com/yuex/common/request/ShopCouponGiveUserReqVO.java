@@ -6,9 +6,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author: yuexaqua
- * @date: 2024/6/6 13:58
- */
+ * @author:yuex
+ * @date*/
 @Data
 public class ShopCouponGiveUserReqVO implements Serializable {
 
